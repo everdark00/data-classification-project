@@ -1,0 +1,14 @@
+data/colly/*
+data/google/*
+data/common/*
+aux.go
+*.pdf
+prod.db
+*.html
+*.txt
+*.pdf
+*.xml
+*.exe
+builds/*
+database_saves/*
+crawls/*
