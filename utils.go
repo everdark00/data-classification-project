@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	d "./db"
+	d "gitlab.com/alekseik1/dataclassification-crawler/db"
 )
 
 // ExtensionByContent ... Returns extension of file by detecting its MIME type, `.none` returned if no MIME found

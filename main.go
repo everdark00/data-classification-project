@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/url"
 	"path"
 	"sync"
@@ -9,8 +10,8 @@ import (
 
 	cc "github.com/karust/gocommoncrawl"
 
-	d "./db"
 	"github.com/BurntSushi/toml"
+	d "gitlab.com/alekseik1/dataclassification-crawler/db"
 )
 
 // Miner ... Holds reference of database and does grouping of methods
