@@ -2,8 +2,33 @@ image: golang:1.17
 
 stages:
   - build
+  - deploy
 
 build:
   stage: build
   script:
-    - go build
+    - go build -o $EXE_NAME
+  artifacts:
+    paths:
+      - $EXE_NAME
+    expire_in: 30 days
+
+deploy:
+  stage: deploy
+  needs:
+    - build
+  rules:
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+      when: on_success
+    - when: never
+  before_script:
+    - echo $DEPLOY_SSH_KEY > deploy_key.key
+  script:
+    # send binary file
+    - scp -i "$PWD"/deploy_key.key "$PWD"/$EXE_NAME "$DEPLOY_HOST":"$DEPLOY_PATH"
+    # send config
+    - scp -i "$PWD"/deploy_key.key "$PWD"/$CONFIG_NAME "$DEPLOY_HOST":"$DEPLOY_PATH"
+
+variables:
+  EXE_NAME: "crawler"
+  CONFIG_NAME: "config.toml"
