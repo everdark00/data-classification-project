@@ -22,12 +22,17 @@ deploy:
       when: on_success
     - when: never
   before_script:
-    - echo $DEPLOY_SSH_KEY > deploy_key.key
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    # Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+    # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+    - ssh-add <(echo "$DEPLOY_SSH_KEY")
+    - mkdir -p ~/.ssh
   script:
     # send binary file
-    - scp -i "$PWD"/deploy_key.key "$PWD"/$EXE_NAME "$DEPLOY_HOST":"$DEPLOY_PATH"
+    - scp "$PWD"/$EXE_NAME "$DEPLOY_HOST":"$DEPLOY_PATH"
     # send config
-    - scp -i "$PWD"/deploy_key.key "$PWD"/$CONFIG_NAME "$DEPLOY_HOST":"$DEPLOY_PATH"
+    - scp "$PWD"/$CONFIG_NAME "$DEPLOY_HOST":"$DEPLOY_PATH"
 
 variables:
   EXE_NAME: "crawler"
