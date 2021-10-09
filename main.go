@@ -271,7 +271,12 @@ func main() {
 	miner.db = d.Database{}
 	miner.db.OpenInitialize(config.General.Database)
 	miner.db.PrintInfo()
-	defer miner.db.Close()
+	defer func(db *d.Database) {
+		err := db.Close()
+		if err != nil {
+			log.Panicln("Error when closing database")
+		}
+	}(&miner.db)
 
 	// Get insustry folders in which data will be saved in categorized way
 	miner.industryFolders = miner.db.GetIndustriesFolders()
