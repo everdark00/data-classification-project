@@ -67,7 +67,7 @@ func randomOption(options []string) string {
 // CreateDir ... Create directory if not exists
 func CreateDir(path string) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := os.Mkdir(path, os.ModeDir)
+		err := os.Mkdir(path, 0755)
 		if err != nil {
 			return fmt.Errorf("[createDir] error: %v", err)
 		}
