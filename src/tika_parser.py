@@ -49,7 +49,10 @@ if __name__ == "__main__":
     # prepare tika
     tika.TikaClientOnly = True
     # prepare logger
-    logger.add(config["base"]["log_path"], level=config["base"]["log_level"])
+    logger.add(
+        Path(config["base"]["log_path"]) / "tika_{time}.log",
+        level=config["base"]["log_level"],
+    )
     main(
         source_dir=config["tika"]["input_path"] / args.locale,
         dest_dir=config["tika"]["output_path"] / args.locale,
