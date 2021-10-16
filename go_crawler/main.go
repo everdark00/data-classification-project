@@ -151,7 +151,7 @@ func (m Miner) GoogleCrawl(config googleConfig, wg *sync.WaitGroup) {
 		done := 0
 		for r := range resChan {
 			if r.Error != nil {
-				logger.Printf("Error occured [%v]: %v\n", r.URL, r.Error)
+				logger.Printf("Error occurred [%v]: %v\n", r.URL, r.Error)
 				done++
 				workers--
 				innerWg.Done()
@@ -163,17 +163,8 @@ func (m Miner) GoogleCrawl(config googleConfig, wg *sync.WaitGroup) {
 				innerWg.Done()
 			} else if r.Warning != nil {
 				logger.Printf("Warning [%v]: %v\n", r.URL, r.Warning)
-			}
-
-			// Debug output
-			if config.Debug && r.Error != nil {
-				fmt.Printf("Error occured [%v]: %v\n", r.URL, r.Error)
 			} else if config.Debug && r.Progress > 0 {
 				fmt.Printf("Progress %v: %v/%v\n", r.URL, r.Progress, r.Total)
-			} else if config.Debug && r.Done {
-				fmt.Printf("Google done: %v\n", r.URL)
-			} else if config.Debug && r.Warning != nil {
-				fmt.Printf("Warning [%v]: %v\n", r.URL, r.Warning)
 			}
 
 			// If amount of `Dones` equal to amount of companies, then exit loop
@@ -235,7 +226,7 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup) {
 		done := 0
 		for r := range resChan {
 			if r.Error != nil {
-				logger.Printf("[CollyCrawl] Error occured: %v\n", r.Error)
+				logger.Printf("[CollyCrawl] Error occurred: %v\n", r.Error)
 			} else if r.Done && r.Loaded > 0 {
 				// Save state in database
 				m.db.CollyFinished(r.URL)
@@ -248,15 +239,6 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup) {
 				done++
 				workers--
 				innerWg.Done()
-			}
-
-			// Debug output
-			if config.Debug && r.Error != nil {
-				fmt.Printf("[CollyCrawl] Error occured: %v\n", r.Error)
-			} else if config.Debug && r.Done && r.Loaded > 0 {
-				fmt.Printf("Colly done: %v\n", r.URL)
-			} else if config.Debug && r.Done && r.Loaded == 0 {
-				fmt.Printf("Colly failed: %v\n", r.URL)
 			}
 
 			// If amount of `Dones` equal to amount of companies, then exit loop
