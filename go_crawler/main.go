@@ -83,8 +83,18 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 		}
 
 		// Do not overload Index API server
+		logger.Printf("Waiting %v seconds before starting new worker", config.SearchInterval)
 		waitTime := time.Second * time.Duration(config.SearchInterval)
 		start := time.Now()
+		for {
+			// Wait time before proceed cycle
+			elapsed := time.Since(start)
+			if elapsed < waitTime {
+				time.Sleep(waitTime - elapsed)
+			} else {
+				break
+			}
+		}
 
 		if config.Debug {
 			logger.Printf("[DEBUG] creating result channel & running handling for URL #%v", i)
@@ -101,12 +111,6 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 
 		go cc.FetchURLData(c.URL, saveFolder, commonConfig)
 		workers++
-
-		// Wait time before proceed cycle
-		elapsed := time.Since(start)
-		if elapsed < waitTime {
-			time.Sleep(waitTime - elapsed)
-		}
 		logger.Printf("(DONE) creating crawler for company #%v with url %v", i, c.URL)
 	}
 
