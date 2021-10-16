@@ -4,4 +4,4 @@ stages:
     deps:
     - ${tika.input_path}/de
     outs:
-    - ${tika.ouput_path}/de
+    - ${tika.output_path}/de
