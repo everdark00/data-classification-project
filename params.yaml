@@ -1,9 +1,8 @@
 base:
   log_level: DEBUG
   random_seed: 42
-  locales: ["de"]
+  log_path: logs
 
 tika:
   input_path: data/raw/
   output_path: data/interim/tika/
-  log_path: logs/tika_{time}.log
