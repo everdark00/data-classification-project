@@ -70,18 +70,30 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 		}
 
 		saveFolder := path.Join(config.Path, getCompanyIndustry(c), url.PathEscape(c.URL))
+		if config.Debug {
+			logger.Printf("[CommonCrawl][DEBUG] creating folder %v", saveFolder)
+		}
 		// Manually create folder since library does not handle permissions properly
 		err := os.Mkdir(saveFolder, 0755)
 		if err != nil {
 			fmt.Printf("Error during folder creaion %v", err)
+		}
+		if config.Debug {
+			logger.Printf("[CommonCrawl][DEBUG] (DONE) creating folder %v", saveFolder)
 		}
 
 		// Do not overload Index API server
 		waitTime := time.Second * time.Duration(config.SearchInterval)
 		start := time.Now()
 
+		if config.Debug {
+			logger.Printf("[CommonCrawl][DEBUG] creating result channel & running handling for URL #%v", i)
+		}
 		resChan[i] = make(chan cc.Result)
 		go handleOne(resChan[i])
+		if config.Debug {
+			logger.Printf("[CommonCrawl][DEBUG] (DONE) creating result channel & running handling for URL #%v", i)
+		}
 
 		// Make config for parser
 		commonConfig := cc.Config{ResultChan: resChan[i], Timeout: config.Timeout, CrawlDB: config.CrawlDB,
