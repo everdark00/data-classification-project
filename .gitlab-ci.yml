@@ -6,25 +6,24 @@ stages:
 build:linux64: &build-base
   stage: build
   variables:
-    EXE_NAME: crawler-linux64
-    GOOS: linux
-    GOARCH: amd64
-    GCO_ENABLED: 0
+    ARCH: linux/amd64
+
+  before_script:
+    - go install github.com/mitchellh/gox@latest
   script:
     - cd go_crawler/
-    - go build -o $EXE_NAME
+    - gox -osarch="$ARCH" -output="go_crawler"
   artifacts:
     paths:
-      - go_crawler/$EXE_NAME
+      - go_crawler/go_crawler_*
     expire_in: 30 days
 
 build:win64:
   <<: *build-base
   variables:
-    EXE_NAME: crawler-win64.exe
-    GOOS: windows
-    GOARCH: amd64
-    GCO_ENABLED: 0
-  before_script:
-    - cd $(go env GOROOT)/src
-    - ./make.bash --no-clean
+    ARCH: windows/amd64
+
+build:macos64:
+  <<: *build-base
+  variables:
+    ARCH: darwin/amd64
