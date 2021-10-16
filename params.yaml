@@ -4,6 +4,6 @@ base:
   locales: ["de"]
 
 tika:
-  input_path: /crawler/data/raw/
-  output_path: /crawler/data/interim/tika/
-  log_path: /crawler/logs/tika_{time}.log
+  input_path: data/raw/
+  output_path: data/interim/tika/
+  log_path: logs/tika_{time}.log
