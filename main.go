@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/url"
+	"os"
 	"path"
 	"sync"
 	"time"
@@ -76,6 +77,11 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 		}
 
 		saveFolder := path.Join(config.Path, getCompanyIndustry(c), url.PathEscape(c.URL))
+		// Manually create folder since library does not handle permissions properly
+		err := os.Mkdir(saveFolder, 0755)
+		if err != nil {
+			fmt.Printf("Error during folder creaion %v", err)
+		}
 
 		// Do not overload Index API server
 		waitTime := time.Second * time.Duration(config.SearchInterval)
