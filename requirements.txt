@@ -1,1 +1,4 @@
+tika
+loguru
+pyyaml
 dvc[gs]
