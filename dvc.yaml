@@ -1,0 +1,7 @@
+stages:
+  tika_de:
+    cmd: python src/tika_parser.py --config=params.yaml --locale=de
+    deps:
+    - ${tika.input_path}/de
+    outs:
+    - ${tika.ouput_path}/de
