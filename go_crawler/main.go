@@ -33,7 +33,7 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 	}
 
 	// Initialize variables
-	logger := logToFile(config.Path + "/common_log.txt")
+	logger := logToFile(config.Path+"/common_log.txt", "[CommonCrawl] ")
 	companies := m.db.GetCommon()
 	// initialize channels to communicate with each crawler
 	resChan := make(map[int]chan cc.Result, len(companies))
@@ -46,32 +46,32 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 	handleOne := func(resChannel chan cc.Result) {
 		for r := range resChannel {
 			if r.Error != nil {
-				logger.Printf("[CommonCrawl] Error occurred: %v\n", r.Error)
+				logger.Printf("Error occurred: %v\n", r.Error)
 			}
 			if r.Done {
 				m.db.CommonFinished(r.URL)
-				logger.Printf("[CommonCrawl] URL is processed: %v\n", r.URL)
+				logger.Printf("URL is processed: %v\n", r.URL)
 				url_done += 1
 				workers -= 1
-				logger.Printf("[CommonCrawl] TOTAL done: %v / %v", url_done, len(companies))
+				logger.Printf("TOTAL done: %v / %v", url_done, len(companies))
 				innerWg.Done()
 				break
 			}
 			if config.Debug && r.Progress > 0 {
-				logger.Printf("[CommonCrawl][DEBUG] Progress %v: %v/%v\n", r.URL, r.Progress, r.Total)
+				logger.Printf("[DEBUG] Progress %v: %v/%v\n", r.URL, r.Progress, r.Total)
 			}
 
 		}
 	}
 	for i, c := range companies {
-		logger.Printf("[CommonCrawl] creating crawler for company #%v with url %v", i, c.URL)
+		logger.Printf("creating crawler for company #%v with url %v", i, c.URL)
 		for workers >= config.Workers {
 			time.Sleep(time.Second * 1)
 		}
 
 		saveFolder := path.Join(config.Path, getCompanyIndustry(c), url.PathEscape(c.URL))
 		if config.Debug {
-			logger.Printf("[CommonCrawl][DEBUG] creating folder %v", saveFolder)
+			logger.Printf("[DEBUG] creating folder %v", saveFolder)
 		}
 		// Manually create folder since library does not handle permissions properly
 		err := os.Mkdir(saveFolder, 0755)
@@ -79,7 +79,7 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 			fmt.Printf("Error during folder creaion %v", err)
 		}
 		if config.Debug {
-			logger.Printf("[CommonCrawl][DEBUG] (DONE) creating folder %v", saveFolder)
+			logger.Printf("[DEBUG] (DONE) creating folder %v", saveFolder)
 		}
 
 		// Do not overload Index API server
@@ -87,12 +87,12 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 		start := time.Now()
 
 		if config.Debug {
-			logger.Printf("[CommonCrawl][DEBUG] creating result channel & running handling for URL #%v", i)
+			logger.Printf("[DEBUG] creating result channel & running handling for URL #%v", i)
 		}
 		resChan[i] = make(chan cc.Result)
 		go handleOne(resChan[i])
 		if config.Debug {
-			logger.Printf("[CommonCrawl][DEBUG] (DONE) creating result channel & running handling for URL #%v", i)
+			logger.Printf("[DEBUG] (DONE) creating result channel & running handling for URL #%v", i)
 		}
 
 		// Make config for parser
@@ -107,11 +107,11 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 		if elapsed < waitTime {
 			time.Sleep(waitTime - elapsed)
 		}
-		logger.Printf("[CommonCrawl] (DONE) creating crawler for company #%v with url %v", i, c.URL)
+		logger.Printf("(DONE) creating crawler for company #%v with url %v", i, c.URL)
 	}
 
 	innerWg.Wait()
-	logger.Printf("[CommonCrawl] All URLs are processed, exiting")
+	logger.Printf("All URLs are processed, exiting")
 }
 
 // GoogleCrawl ... Uses google search filters to find documents
@@ -126,7 +126,7 @@ func (m Miner) GoogleCrawl(config googleConfig, wg *sync.WaitGroup) {
 	}
 
 	// Initialize variables
-	logger := logToFile(config.Path + "/google_log.txt")
+	logger := logToFile(config.Path+"/google_log.txt", "[GoogleCrawl] ")
 	resChan := make(chan GoogleResultChan)
 	companies := m.db.GetGoogle()
 	workers := 0
@@ -210,7 +210,7 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup) {
 	}
 
 	// Initialize variables
-	logger := logToFile(config.Path + "/colly_log.txt")
+	logger := logToFile(config.Path+"/colly_log.txt", "[CollyCrawl] ")
 	resChan := make(chan CollyResultChan)
 	companies := m.db.GetColly()
 	workers := 0

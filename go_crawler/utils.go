@@ -92,14 +92,14 @@ func getCompanyIndustry(c d.Companies) string {
 	return c.Industry
 }
 
-func logToFile(location string) *log.Logger {
+func logToFile(location string, prefix string) *log.Logger {
 	f, err := os.Create(location)
 	if err != nil {
 		panic(err)
 	}
 
 	mw := io.MultiWriter(os.Stdout, f)
-	logger := log.New(mw, "", log.LstdFlags)
+	logger := log.New(mw, prefix, log.LstdFlags)
 	logger.Println("Log started\n-------------------------------")
 	return logger
 }
