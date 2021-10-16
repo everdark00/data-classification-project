@@ -1,5 +1,5 @@
 [general]
-database = "/crawler/de-crawler/prod.db"         # Location of SQLite database
+database = "/crawler/de-crawler/de.db"         # Location of SQLite database
 
 [common]
 use = true                   # Use this crawler or not
@@ -11,10 +11,10 @@ timeout = 30                 # Query to Common Crawl Index API may take time
 search_interval = 2          # In seconds. Do not overload Index API server
 crawl_db = "CC-MAIN-2021-04" # Web Archive version 
 wait_time = 53               # In milliseconds. Wait time between loads from Amazon S3
-workers = 1                 # Number of goroutines (threads) for this crawling method
+workers = 4                 # Number of goroutines (threads) for this crawling method
 
 [google]
-use = true
+use = false
 path = "/crawler/data/raw/de/google"
 debug = true
 extension = "pdf"       # Which files to search
@@ -23,7 +23,7 @@ max_file_size = 30      # In megabytes
 workers = 1
 
 [colly]
-use = true
+use = false
 path = "/crawler/data/raw/de/colly"
 debug = true
 extensions = [".html", ".htm",  ".pdf", ".doc", ".docx", ".odt", ".xls", ".xlsx", ".ods", ".ppt", ".pptx",  ".txt"]
