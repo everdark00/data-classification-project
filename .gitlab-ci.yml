@@ -3,8 +3,13 @@ image: golang:1.17
 stages:
   - build
 
-build:
+build:linux64: &build-base
   stage: build
+  variables:
+    EXE_NAME: crawler-linux64
+    GOOS: linux
+    GOARCH: amd64
+    GCO_ENABLED: 0
   script:
     - cd go_crawler/
     - go build -o $EXE_NAME
@@ -13,6 +18,13 @@ build:
       - go_crawler/$EXE_NAME
     expire_in: 30 days
 
-variables:
-  EXE_NAME: "crawler"
-  CONFIG_NAME: "config.toml"
+build:win64:
+  <<: *build-base
+  variables:
+    EXE_NAME: crawler-win64.exe
+    GOOS: windows
+    GOARCH: amd64
+    GCO_ENABLED: 0
+  before_script:
+    - cd $(go env GOROOT)/src
+    - ./make.bash --no-clean
