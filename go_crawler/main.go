@@ -52,17 +52,13 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 				// NOTE if GetPagesInfo error, an exit is required since NO MORE messages will come
 				// see src codes for details
 				if strings.Contains(r.Error.Error(), "GetPagesInfo") {
-					logger.Printf("#%v Exiting after GetPagesInfo error")
+					logger.Printf("#%v Exiting after GetPagesInfo error", num)
 					break
 				}
 			}
 			if r.Done {
 				m.db.CommonFinished(r.URL)
 				logger.Printf("#%v URL is processed: %v\n", num, r.URL)
-				url_done += 1
-				workers -= 1
-				logger.Printf("#%v TOTAL done: %v / %v", num, url_done, len(companies))
-				innerWg.Done()
 				break
 			}
 			if config.Debug && r.Progress > 0 {
@@ -70,6 +66,11 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 			}
 
 		}
+		// NOTE after implementing "reschedule broken URL" feature url_done should not increment here
+		url_done += 1
+		workers -= 1
+		logger.Printf("#%v TOTAL done: %v / %v", num, url_done, len(companies))
+		innerWg.Done()
 	}
 	for i, c := range companies {
 		for workers >= config.Workers {
