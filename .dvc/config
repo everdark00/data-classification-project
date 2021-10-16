@@ -1,2 +1,6 @@
 [cache]
     type = "reflink,hardlink"
+[core]
+    remote = gcloud
+['remote "gcloud"']
+    url = gs://data-classification-documents/main
