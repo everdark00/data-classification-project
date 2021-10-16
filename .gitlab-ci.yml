@@ -10,7 +10,7 @@ build:
     - go build -o $EXE_NAME
   artifacts:
     paths:
-      - $EXE_NAME
+      - go_crawler/$EXE_NAME
     expire_in: 30 days
 
 variables:
