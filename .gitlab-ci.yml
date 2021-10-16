@@ -12,10 +12,10 @@ build:linux64: &build-base
     - go install github.com/mitchellh/gox@latest
   script:
     - cd go_crawler/
-    - gox -osarch="$ARCH" -output="go_crawler"
+    - gox -osarch="$ARCH"
   artifacts:
     paths:
-      - go_crawler/go_crawler_*
+      - "go_crawler/dataclassification-crawler_*"
     expire_in: 30 days
 
 build:win64:
