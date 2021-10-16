@@ -43,31 +43,32 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 
 	// Track progress from goroutines via channel
 	url_done := 0
-	handleOne := func(resChannel chan cc.Result) {
+	handleOne := func(resChannel chan cc.Result, num int) {
+		logger.Printf("Starting waiting for events for channel #%v", num)
 		for r := range resChannel {
 			if r.Error != nil {
-				logger.Printf("Error occurred: %v\n", r.Error)
+				logger.Printf("#%v Error occurred: %v\n", num, r.Error)
 			}
 			if r.Done {
 				m.db.CommonFinished(r.URL)
-				logger.Printf("URL is processed: %v\n", r.URL)
+				logger.Printf("#%v URL is processed: %v\n", num, r.URL)
 				url_done += 1
 				workers -= 1
-				logger.Printf("TOTAL done: %v / %v", url_done, len(companies))
+				logger.Printf("#%v TOTAL done: %v / %v", num, url_done, len(companies))
 				innerWg.Done()
 				break
 			}
 			if config.Debug && r.Progress > 0 {
-				logger.Printf("[DEBUG] Progress %v: %v/%v\n", r.URL, r.Progress, r.Total)
+				logger.Printf("[DEBUG] #%v Progress %v: %v/%v\n", num, r.URL, r.Progress, r.Total)
 			}
 
 		}
 	}
 	for i, c := range companies {
-		logger.Printf("creating crawler for company #%v with url %v", i, c.URL)
 		for workers >= config.Workers {
 			time.Sleep(time.Second * 1)
 		}
+		logger.Printf("creating crawler for company #%v with url %v", i, c.URL)
 
 		saveFolder := path.Join(config.Path, getCompanyIndustry(c), url.PathEscape(c.URL))
 		if config.Debug {
@@ -100,7 +101,7 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 			logger.Printf("[DEBUG] creating result channel & running handling for URL #%v", i)
 		}
 		resChan[i] = make(chan cc.Result)
-		go handleOne(resChan[i])
+		go handleOne(resChan[i], i)
 		if config.Debug {
 			logger.Printf("[DEBUG] (DONE) creating result channel & running handling for URL #%v", i)
 		}
