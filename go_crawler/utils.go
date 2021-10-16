@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"math/rand"
 	"net/http"
@@ -67,7 +68,7 @@ func randomOption(options []string) string {
 // CreateDir ... Create directory if not exists
 func CreateDir(path string) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := os.Mkdir(path, 0755)
+		err := os.Mkdir(path, os.ModeDir)
 		if err != nil {
 			return fmt.Errorf("[createDir] error: %v", err)
 		}
@@ -97,7 +98,8 @@ func logToFile(location string) *log.Logger {
 		panic(err)
 	}
 
-	logger := log.New(f, "", log.LstdFlags)
+	mw := io.MultiWriter(os.Stdout, f)
+	logger := log.New(mw, "", log.LstdFlags)
 	logger.Println("Log started\n-------------------------------")
 	return logger
 }

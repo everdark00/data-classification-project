@@ -78,6 +78,7 @@ func (db *Database) CommonFinished(url string) {
 	db.Model(&company).Where("url = ?", url).Update("is_common_crawled", true)
 	company.IsCommonCrawled = true
 	db.Save(&company)
+	fmt.Println("Marked Common URL as DONE:", url)
 }
 
 func (db *Database) GetGoogle() []Companies {
@@ -91,6 +92,7 @@ func (db *Database) GoogleFinished(url string) {
 	db.Model(&company).Where("url = ?", url).Update("is_google_crawled", true)
 	company.IsGoogleCrawled = true
 	db.Save(&company)
+	fmt.Println("Marked Google URL as DONE:", url)
 }
 
 func (db *Database) GetColly() []Companies {
@@ -104,6 +106,7 @@ func (db *Database) CollyFinished(url string) {
 	db.Model(&company).Where("url = ?", url).Update("is_colly_crawled", true)
 	company.IsCollyCrawled = true
 	db.Save(&company)
+	fmt.Println("Marked Colly URL as DONE:", url)
 }
 
 func (db *Database) fillToDebug() {

@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/url"
-	"os"
 	"path"
 	"sync"
 	"time"
@@ -34,61 +32,52 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 
 	// Initialize variables
 	logger := logToFile(config.Path + "/common_log.txt")
-	resChan := make(chan cc.Result)
 	companies := m.db.GetCommon()
+	// initialize channels to communicate with each crawler
+	resChan := make(map[int]chan cc.Result, len(companies))
 	workers := 0
 	var innerWg sync.WaitGroup
-	innerWg.Add(len(companies) + 1)
+	innerWg.Add(len(companies))
 
 	// Track progress from goroutines via channel
-	go func() {
-		done := 0
-		for r := range resChan {
+	url_done := 0
+	handleOne := func(resChannel chan cc.Result) {
+		for r := range resChannel {
 			if r.Error != nil {
-				logger.Printf("[CommonCrawl] Error occured: %v\n", r.Error)
-			} else if r.Done {
+				logger.Printf("[CommonCrawl] Error occurred: %v\n", r.Error)
+			}
+			if r.Done {
 				m.db.CommonFinished(r.URL)
-				logger.Printf("Common done: %v\n", r.URL)
-				done++
-				workers--
+				logger.Printf("[CommonCrawl] URL is processed: %v\n", r.URL)
+				url_done += 1
+				workers -= 1
+				logger.Printf("[CommonCrawl] TOTAL done: %v / %v", url_done, len(companies))
 				innerWg.Done()
-			}
-
-			// Debug output
-			if config.Debug && r.Error != nil {
-				fmt.Printf("Error occured: %v\n", r.Error)
-			} else if config.Debug && r.Progress > 0 {
-				fmt.Printf("Progress %v: %v/%v\n", r.URL, r.Progress, r.Total)
-			} else if config.Debug && r.Done {
-				fmt.Printf("Commo done: %v\n", r.URL)
-			}
-
-			// If amount of `Dones` equal to amount of companies, then exit loop
-			if done == len(companies) {
 				break
 			}
-		}
-		innerWg.Done()
-	}()
+			if config.Debug && r.Progress > 0 {
+				logger.Printf("[CommonCrawl][DEBUG] Progress %v: %v/%v\n", r.URL, r.Progress, r.Total)
+			}
 
-	for _, c := range companies {
+		}
+	}
+	for i, c := range companies {
+		logger.Printf("[CommonCrawl] creating crawler for company #%v with url %v", i, c.URL)
 		for workers >= config.Workers {
 			time.Sleep(time.Second * 1)
 		}
 
 		saveFolder := path.Join(config.Path, getCompanyIndustry(c), url.PathEscape(c.URL))
-		// Manually create folder since library does not handle permissions properly
-		err := os.Mkdir(saveFolder, 0755)
-		if err != nil {
-			fmt.Printf("Error during folder creaion %v", err)
-		}
 
 		// Do not overload Index API server
 		waitTime := time.Second * time.Duration(config.SearchInterval)
 		start := time.Now()
 
+		resChan[i] = make(chan cc.Result)
+		go handleOne(resChan[i])
+
 		// Make config for parser
-		commonConfig := cc.Config{ResultChan: resChan, Timeout: config.Timeout, CrawlDB: config.CrawlDB,
+		commonConfig := cc.Config{ResultChan: resChan[i], Timeout: config.Timeout, CrawlDB: config.CrawlDB,
 			WaitMS: config.WaitTime, Extensions: config.Extensions, MaxAmount: config.MaxAmount}
 
 		go cc.FetchURLData(c.URL, saveFolder, commonConfig)
@@ -99,8 +88,11 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 		if elapsed < waitTime {
 			time.Sleep(waitTime - elapsed)
 		}
+		logger.Printf("[CommonCrawl] (DONE) creating crawler for company #%v with url %v", i, c.URL)
 	}
+
 	innerWg.Wait()
+	logger.Printf("[CommonCrawl] All URLs are processed, exiting")
 }
 
 // GoogleCrawl ... Uses google search filters to find documents
@@ -278,12 +270,7 @@ func main() {
 	miner.db = d.Database{}
 	miner.db.OpenInitialize(config.General.Database)
 	miner.db.PrintInfo()
-	defer func(db *d.Database) {
-		err := db.Close()
-		if err != nil {
-			log.Panicln("Error when closing database")
-		}
-	}(&miner.db)
+	defer miner.db.Close()
 
 	// Get insustry folders in which data will be saved in categorized way
 	miner.industryFolders = miner.db.GetIndustriesFolders()
