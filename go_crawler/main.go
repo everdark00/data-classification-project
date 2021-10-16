@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"strings"
 	"sync"
 	"time"
 
@@ -48,6 +49,12 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 		for r := range resChannel {
 			if r.Error != nil {
 				logger.Printf("#%v Error occurred: %v\n", num, r.Error)
+				// NOTE if GetPagesInfo error, an exit is required since NO MORE messages will come
+				// see src codes for details
+				if strings.Contains(r.Error.Error(), "GetPagesInfo") {
+					logger.Printf("#%v Exiting after GetPagesInfo error")
+					break
+				}
 			}
 			if r.Done {
 				m.db.CommonFinished(r.URL)
