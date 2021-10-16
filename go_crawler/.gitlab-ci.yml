@@ -1,0 +1,39 @@
+image: golang:1.17
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - go build -o $EXE_NAME
+  artifacts:
+    paths:
+      - $EXE_NAME
+    expire_in: 30 days
+
+deploy:
+  stage: deploy
+  needs:
+    - build
+  rules:
+    - if: "$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
+      when: on_success
+    - when: never
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    # Run ssh-agent (inside the build environment)
+    - eval $(ssh-agent -s)
+    # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+    - ssh-add <(echo "$DEPLOY_SSH_KEY")
+    - mkdir -p ~/.ssh
+  script:
+    # send binary file
+    - scp "$PWD"/$EXE_NAME "crawler@$DEPLOY_HOST":"$DEPLOY_PATH"
+    # send config
+    - scp "$PWD"/$CONFIG_NAME "crawler@$DEPLOY_HOST":"$DEPLOY_PATH"
+
+variables:
+  EXE_NAME: "crawler"
+  CONFIG_NAME: "config.toml"

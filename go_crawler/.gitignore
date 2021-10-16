@@ -1,10 +1,8 @@
-data/colly/*
-data/google/*
-data/common/*
 aux.go
 *.pdf
 prod.db
 *.html
+*.txt
 *.xml
 *.exe
 builds/*
