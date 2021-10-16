@@ -1,35 +1,35 @@
 [general]
-database = "prod.db"         # Location of SQLite database
+database = "/crawler/de-crawler/prod.db"         # Location of SQLite database
 
 [common]
 use = true                   # Use this crawler or not
-path = "data/common"         # Where collected data will be saved
-debug = false                # Show debug output
+path = "/crawler/data/raw/de/common"         # Where collected data will be saved
+debug = true                # Show debug output
 extensions = [".html", ".htm",  ".pdf", ".doc", ".docx", ".odt", ".xls", ".xlsx", ".ods", ".ppt", ".pptx",  ".txt"]        # Which files to save. If empty - save all files
 max_amount = 5000            # Limit amount of downloaded files
 timeout = 30                 # Query to Common Crawl Index API may take time
 search_interval = 2          # In seconds. Do not overload Index API server
 crawl_db = "CC-MAIN-2021-04" # Web Archive version 
 wait_time = 53               # In milliseconds. Wait time between loads from Amazon S3
-workers = 40                 # Number of goroutines (threads) for this crawling method
+workers = 2                 # Number of goroutines (threads) for this crawling method
 
 [google]
 use = true
-path = "data/google"
-debug = false
+path = "/crawler/data/raw/de/google"
+debug = true
 extension = "pdf"       # Which files to search
 search_interval = 30    # In seconds
 max_file_size = 30      # In megabytes
-workers = 40
+workers = 2
 
 [colly]
 use = true
-path = "data/colly"
-debug = false
+path = "/crawler/data/raw/de/colly"
+debug = true
 extensions = [".html", ".htm",  ".pdf", ".doc", ".docx", ".odt", ".xls", ".xlsx", ".ods", ".ppt", ".pptx",  ".txt"]
 max_amount = 5000
 max_file_size = 30      # In megabytes
 max_html_load = 70      # Total size of HTML files in folder. In megabytes
 work_minutes = 120
-workers = 4
+workers = 2
 random_name = false     # Add randmon prefix to file
