@@ -11,7 +11,7 @@ timeout = 30                 # Query to Common Crawl Index API may take time
 search_interval = 2          # In seconds. Do not overload Index API server
 crawl_db = "CC-MAIN-2021-04" # Web Archive version 
 wait_time = 53               # In milliseconds. Wait time between loads from Amazon S3
-workers = 4                 # Number of goroutines (threads) for this crawling method
+workers = 8                 # Number of goroutines (threads) for this crawling method
 
 [google]
 use = false
