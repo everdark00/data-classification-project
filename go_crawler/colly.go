@@ -26,6 +26,7 @@ type CollyConfig struct {
 	MaxAmount     int
 	Extensions    []string
 	RandomizeName bool
+	RandomSeed    int64
 }
 
 // CrawlSite ... Crawl choosen URL and saves found files
@@ -63,7 +64,7 @@ func CrawlSite(urlSite string, saveto string, config CollyConfig) {
 	})
 
 	c.OnRequest(func(r *cly.Request) {
-		r.Headers.Set("User-Agent", randomOption(userAgents))
+		r.Headers.Set("User-Agent", randomOption(userAgents, config.RandomSeed))
 		//fmt.Println("[Visiting]", r.URL.String())
 	})
 	c.OnError(func(_ *cly.Response, err error) {

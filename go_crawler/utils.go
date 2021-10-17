@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	d "gitlab.com/alekseik1/dataclassification-crawler/db"
 	"io"
 	"log"
 	"math/rand"
@@ -9,9 +10,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
-
-	d "gitlab.com/alekseik1/dataclassification-crawler/db"
 )
 
 // ExtensionByContent ... Returns extension of file by detecting its MIME type, `.none` returned if no MIME found
@@ -59,8 +57,8 @@ func randString(len int) string {
 	return string(bytes)
 }
 
-func randomOption(options []string) string {
-	rand.Seed(time.Now().Unix())
+func randomOption(options []string, seed int64) string {
+	rand.Seed(seed)
 	randNum := rand.Int() % len(options)
 	return options[randNum]
 }

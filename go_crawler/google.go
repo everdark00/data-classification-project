@@ -54,10 +54,10 @@ func buildGoogleURL(searchTerm string, countryCode string, languageCode string) 
 
 }
 
-func googleRequest(searchURL string) (*http.Response, error) {
+func googleRequest(searchURL string, randomSeed int64) (*http.Response, error) {
 	baseClient := &http.Client{}
 	req, _ := http.NewRequest("GET", searchURL, nil)
-	req.Header.Set("User-Agent", randomOption(userAgents))
+	req.Header.Set("User-Agent", randomOption(userAgents, randomSeed))
 
 	res, err := baseClient.Do(req)
 
@@ -100,10 +100,10 @@ func googleResultParser(response *http.Response) ([]GoogleResult, error) {
 }
 
 // GoogleScrape ...
-func GoogleScrape(searchTerm string, countryCode string, languageCode string) ([]GoogleResult, error) {
+func GoogleScrape(searchTerm string, countryCode string, languageCode string, randomSeed int64) ([]GoogleResult, error) {
 	googleURL := buildGoogleURL(searchTerm, countryCode, languageCode)
 
-	res, err := googleRequest(googleURL)
+	res, err := googleRequest(googleURL, randomSeed)
 
 	if err != nil {
 		return nil, err
@@ -154,10 +154,10 @@ func DownloadFile(saveto string, extension string, url string, maxMegabytes uint
 }
 
 // FetchURLFiles ...
-func FetchURLFiles(url string, extension string, saveto string, maxMegabytes uint64, resultChan chan GoogleResultChan) {
+func FetchURLFiles(url string, extension string, saveto string, maxMegabytes uint64, resultChan chan GoogleResultChan, randomSeed int64) {
 	// Query google with filter
 	query := fmt.Sprintf("site:%v filetype:%v", url, extension)
-	res, err := GoogleScrape(query, "ru", "RU")
+	res, err := GoogleScrape(query, "ru", "RU", randomSeed)
 	if err != nil {
 		resultChan <- GoogleResultChan{Error: fmt.Errorf("[FetchURLFiles] error: %v", err), URL: url}
 		return

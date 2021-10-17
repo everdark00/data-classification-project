@@ -35,6 +35,7 @@ type googleConfig struct {
 	SearchInterval int    `toml:"search_interval"`
 	MaxFileSize    uint64 `toml:"max_file_size"`
 	Workers        int
+	RandomSeed     int64 `toml:"random_seed"`
 	//RandomName     bool `toml:"random_name"`
 }
 
@@ -48,5 +49,6 @@ type collyConfig struct {
 	MaxHTMLLoad uint `toml:"max_html_load"`
 	WorkMinutes int  `toml:"work_minutes"`
 	Workers     int
-	RandomName  bool `toml:"random_name"`
+	RandomName  bool  `toml:"random_name"`
+	RandomSeed  int64 `toml:"random_seed"`
 }

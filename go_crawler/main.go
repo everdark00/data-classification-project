@@ -190,7 +190,7 @@ func (m Miner) GoogleCrawl(config googleConfig, wg *sync.WaitGroup) {
 		waitTime := time.Second * time.Duration(config.SearchInterval)
 		start := time.Now()
 
-		go FetchURLFiles(c.URL, config.Extension, saveFolder, config.MaxFileSize, resChan)
+		go FetchURLFiles(c.URL, config.Extension, saveFolder, config.MaxFileSize, resChan, config.RandomSeed)
 		workers++
 
 		// Wait time before next cycle
@@ -262,7 +262,7 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup) {
 
 		// Make configuration for crawler
 		collyConfig := CollyConfig{ResChanel: resChan, MaxAmount: config.MaxAmount, Extensions: config.Extensions,
-			MaxFileSize: config.MaxFileSize, MaxHTMLLoad: config.MaxHTMLLoad, WorkMinutes: config.WorkMinutes, RandomizeName: config.RandomName}
+			MaxFileSize: config.MaxFileSize, MaxHTMLLoad: config.MaxHTMLLoad, WorkMinutes: config.WorkMinutes, RandomizeName: config.RandomName, RandomSeed: config.RandomSeed}
 
 		go CrawlSite(c.URL, saveFolder, collyConfig)
 		workers++

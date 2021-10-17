@@ -21,6 +21,7 @@ extension = "pdf"       # Which files to search
 search_interval = 30    # In seconds
 max_file_size = 30      # In megabytes
 workers = 2
+random_seed = 42
 
 [colly]
 use = true
@@ -33,3 +34,4 @@ max_html_load = 70      # Total size of HTML files in folder. In megabytes
 work_minutes = 120
 workers = 2
 random_name = false     # Add randmon prefix to file
+random_seed = 42
