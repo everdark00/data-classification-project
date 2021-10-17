@@ -1,0 +1,18 @@
+schema: '2.0'
+stages:
+  tika_de_common:
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=de
+    deps:
+    - path: data/raw//de/common
+      md5: 9f80e0b0be0055f64d2f66fcc6c90c5e.dir
+      size: 32112035130
+      nfiles: 199602
+    - path: src/tika_parser.py
+      md5: e6868c172e17d0d8c7215c6b67487322
+      size: 2003
+    outs:
+    - path: data/interim/tika//de/common
+      md5: 0aea776e26530acb77712d9faeb3ea17.dir
+      size: 3912180462
+      nfiles: 199602
