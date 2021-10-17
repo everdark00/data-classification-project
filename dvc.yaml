@@ -1,7 +1,8 @@
 stages:
-  tika_de:
+  tika_de_common:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml --locale=de
     deps:
-    - ${tika.input_path}/de
+    - ${tika.input_path}/de/common
+    - src/tika_parser.py
     outs:
-    - ${tika.output_path}/de
+    - ${tika.output_path}/de/common
