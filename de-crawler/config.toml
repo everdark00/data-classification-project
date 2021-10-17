@@ -20,10 +20,11 @@ debug = true
 extension = "pdf"       # Which files to search
 search_interval = 30    # In seconds
 max_file_size = 30      # In megabytes
-workers = 1
+workers = 4
+random_seed = 42
 
 [colly]
-use = false
+use = true
 path = "/crawler/data/raw/de/colly"
 debug = true
 extensions = [".html", ".htm",  ".pdf", ".doc", ".docx", ".odt", ".xls", ".xlsx", ".ods", ".ppt", ".pptx",  ".txt"]
@@ -31,5 +32,6 @@ max_amount = 5000
 max_file_size = 30      # In megabytes
 max_html_load = 70      # Total size of HTML files in folder. In megabytes
 work_minutes = 120
-workers = 1
+workers = 4
 random_name = false     # Add randmon prefix to file
+random_seed = 42
