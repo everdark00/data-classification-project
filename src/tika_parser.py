@@ -41,10 +41,10 @@ def main(source_dir: Path, dest_dir: Path):
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("--config", type=Path, required=True)
-    parser.add_argument("--locale", type=str, required=True)
-    args = parser.parse_args()
+    a_parser = ArgumentParser()
+    a_parser.add_argument("--config", type=Path, required=True)
+    a_parser.add_argument("--locale", type=str, required=True)
+    args = a_parser.parse_args()
     config = load_config(args.config)
     # prepare tika
     tika.TikaClientOnly = True
@@ -54,6 +54,6 @@ if __name__ == "__main__":
         level=config["base"]["log_level"],
     )
     main(
-        source_dir=config["tika"]["input_path"] / args.locale,
-        dest_dir=config["tika"]["output_path"] / args.locale,
+        source_dir=Path(config["tika"]["input_path"]) / args.locale,
+        dest_dir=Path(config["tika"]["output_path"]) / args.locale,
     )
