@@ -227,6 +227,11 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup) {
 		for r := range resChan {
 			if r.Error != nil {
 				logger.Printf("[CollyCrawl] Error occurred: %v\n", r.Error)
+				if strings.Contains(r.Error.Error(), "context deadline exceeded") {
+					logger.Printf("[CollyCrawl] death error occurred, exiting worker")
+					workers--
+					innerWg.Done()
+				}
 			} else if r.Done && r.Loaded > 0 {
 				// Save state in database
 				m.db.CollyFinished(r.URL)
