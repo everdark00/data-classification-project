@@ -42,6 +42,7 @@ func CrawlSite(urlSite string, saveto string, config CollyConfig) {
 	maxLoadSize := config.MaxHTMLLoad * 1024
 	waitTime := time.Minute * time.Duration(config.WorkMinutes)
 	c := cly.NewCollector()
+	cly.Async(true)
 	c.AllowedDomains = []string{"www." + urlSite, "sso." + urlSite, urlSite, "s3.amazonaws.com"}
 	c.WithTransport(&http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
@@ -119,4 +120,5 @@ func CrawlSite(urlSite string, saveto string, config CollyConfig) {
 	}
 
 	config.ResChanel <- CollyResultChan{URL: urlSite, Done: true, Loaded: loadedSize}
+	close(config.ResChanel)
 }

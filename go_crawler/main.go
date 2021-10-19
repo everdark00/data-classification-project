@@ -215,32 +215,32 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup) {
 
 	// Initialize variables
 	logger := logToFile(config.Path+"/colly_log.txt", "[CollyCrawl] ")
-	resChan := make(chan CollyResultChan)
 	companies := m.db.GetColly()
 	workers := 0
+	resChan := make(map[int]chan CollyResultChan, len(companies))
 	var innerWg sync.WaitGroup
 	innerWg.Add(len(companies) + 1)
 
 	// Track progress from goroutines via channel
-	go func() {
+	handleOne := func(resChan chan CollyResultChan, num int) {
 		done := 0
 		for r := range resChan {
 			if r.Error != nil {
-				logger.Printf("[CollyCrawl] Error occurred: %v\n", r.Error)
-				if strings.Contains(r.Error.Error(), "context deadline exceeded") {
-					logger.Printf("[CollyCrawl] death error occurred, exiting worker")
-					workers--
-					innerWg.Done()
-				}
+				logger.Printf("[CollyCrawl] #%v Error occurred: %v\n", num, r.Error)
+				//if strings.Contains(r.Error.Error(), "context deadline exceeded") {
+				//	logger.Printf("[CollyCrawl] #%v death error occurred, exiting worker", num)
+				//	workers--
+				//	innerWg.Done()
+				//}
 			} else if r.Done && r.Loaded > 0 {
 				// Save state in database
 				m.db.CollyFinished(r.URL)
-				logger.Printf("Colly done: %v\n", r.URL)
+				logger.Printf("[CollyCrawl] #%v Colly done: %v\n", num, r.URL)
 				done++
 				workers--
 				innerWg.Done()
 			} else if r.Done && r.Loaded == 0 {
-				logger.Printf("Colly failed: %v\n", r.URL)
+				logger.Printf("[CollyCrawl] #%v Colly failed: %v\n", num, r.URL)
 				done++
 				workers--
 				innerWg.Done()
@@ -252,10 +252,10 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup) {
 			}
 		}
 		innerWg.Done()
-	}()
+	}
 
 	// Launch goroutine with crawler for each site
-	for _, c := range companies {
+	for i, c := range companies {
 		for workers >= config.Workers {
 			time.Sleep(time.Second * 1)
 		}
@@ -265,10 +265,14 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup) {
 			panic(err)
 		}
 
+		resChan[i] = make(chan CollyResultChan)
 		// Make configuration for crawler
-		collyConfig := CollyConfig{ResChanel: resChan, MaxAmount: config.MaxAmount, Extensions: config.Extensions,
+		collyConfig := CollyConfig{ResChanel: resChan[i], MaxAmount: config.MaxAmount, Extensions: config.Extensions,
 			MaxFileSize: config.MaxFileSize, MaxHTMLLoad: config.MaxHTMLLoad, WorkMinutes: config.WorkMinutes, RandomizeName: config.RandomName, RandomSeed: config.RandomSeed}
 
+		logger.Printf("[CollyCrawl] running handler for #%v", i)
+		go handleOne(resChan[i], i)
+		logger.Printf("[CollyCrawl] running crawler for #%v", i)
 		go CrawlSite(c.URL, saveFolder, collyConfig)
 		workers++
 	}
