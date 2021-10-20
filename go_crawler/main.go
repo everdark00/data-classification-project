@@ -23,7 +23,7 @@ type Miner struct {
 }
 
 // CommonCrawl ... Crawler which uses Common Crawl web archive to get HTML pages and other data
-func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
+func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup, logPath string) {
 	defer wg.Done()
 
 	// Create directories in which data from sites will be saved
@@ -34,7 +34,7 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 	}
 
 	// Initialize variables
-	logger := logToFile(config.Path+"/common_log.txt", "[CommonCrawl] ")
+	logger := logToFile(logPath+"/common_log.txt", "[CommonCrawl] ")
 	companies := m.db.GetCommon()
 	// initialize channels to communicate with each crawler
 	resChan := make(map[int]chan cc.Result, len(companies))
@@ -128,7 +128,7 @@ func (m Miner) CommonCrawl(config commonConfig, wg *sync.WaitGroup) {
 }
 
 // GoogleCrawl ... Uses google search filters to find documents
-func (m Miner) GoogleCrawl(config googleConfig, wg *sync.WaitGroup) {
+func (m Miner) GoogleCrawl(config googleConfig, wg *sync.WaitGroup, logPath string) {
 	defer wg.Done()
 
 	// Create directories in which data from sites will be saved
@@ -139,7 +139,7 @@ func (m Miner) GoogleCrawl(config googleConfig, wg *sync.WaitGroup) {
 	}
 
 	// Initialize variables
-	logger := logToFile(config.Path+"/google_log.txt", "[GoogleCrawl] ")
+	logger := logToFile(logPath+"/google_log.txt", "[GoogleCrawl] ")
 	resChan := make(chan GoogleResultChan)
 	companies := m.db.GetGoogle()
 	workers := 0
@@ -203,7 +203,7 @@ func (m Miner) GoogleCrawl(config googleConfig, wg *sync.WaitGroup) {
 }
 
 // CollyCrawl ... Crawls each website by visiting links on them. Saves found PDF and HTML documents
-func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup) {
+func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup, logPath string) {
 	defer wg.Done()
 
 	// Create directories in which data from sites will be saved
@@ -214,7 +214,7 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup) {
 	}
 
 	// Initialize variables
-	logger := logToFile(config.Path+"/colly_log.txt", "[CollyCrawl] ")
+	logger := logToFile(logPath+"/colly_log.txt", "[CollyCrawl] ")
 	companies := m.db.GetColly()
 	workers := 0
 	resChan := make(map[int]chan CollyResultChan, len(companies))
@@ -307,19 +307,19 @@ func main() {
 	// 1. Use CommonCrawl to retrive indexed HTML pages of given site
 	if config.Common.Use {
 		wg.Add(1)
-		go miner.CommonCrawl(config.Common, &wg)
+		go miner.CommonCrawl(config.Common, &wg, config.General.LogPath)
 	}
 
 	// 2. Use Google search with to find cached files
 	if config.Google.Use {
 		wg.Add(1)
-		go miner.GoogleCrawl(config.Google, &wg)
+		go miner.GoogleCrawl(config.Google, &wg, config.General.LogPath)
 	}
 
 	// 3. Crawl site with GoColly to find unindexed documents
 	if config.Colly.Use {
 		wg.Add(1)
-		go miner.CollyCrawl(config.Colly, &wg)
+		go miner.CollyCrawl(config.Colly, &wg, config.General.LogPath)
 	}
 	wg.Wait()
 }

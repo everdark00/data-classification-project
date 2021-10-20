@@ -1,5 +1,6 @@
 [general]
 database = "/crawler/de-crawler/prod.db"         # Location of SQLite database
+log_path = "/crawler/logs"
 
 [common]
 use = true                   # Use this crawler or not

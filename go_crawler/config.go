@@ -10,6 +10,7 @@ type Config struct {
 
 type generalConfig struct {
 	Database string
+	LogPath  string `toml:"log_path"`
 }
 
 type commonConfig struct {
