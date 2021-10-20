@@ -1,5 +1,6 @@
 [general]
 database = "/crawler/de-crawler/de.db"         # Location of SQLite database
+log_path = "/crawler/logs/"
 
 [common]
 use = true                   # Use this crawler or not
@@ -32,6 +33,6 @@ max_amount = 5000
 max_file_size = 30      # In megabytes
 max_html_load = 70      # Total size of HTML files in folder. In megabytes
 work_minutes = 120
-workers = 4
+workers = 1
 random_name = false     # Add randmon prefix to file
 random_seed = 42
