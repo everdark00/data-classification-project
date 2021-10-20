@@ -6,3 +6,18 @@ stages:
     - src/tika_parser.py
     outs:
     - ${tika.output_path}/de/common
+    params:
+      - tika
+      - base
+
+  tokenizer_de:
+    cmd: "export PYTHONPATH=$PWD && \
+     python -m spacy download de_core_news_sm && \
+     python src/tokenizer.py --config=params.yaml --locale=de"
+    deps:
+      - ${tokenizer.input_path}/de
+    outs:
+      - ${tokenizer.output_path}/de
+    params:
+      - tokenizer
+      - base

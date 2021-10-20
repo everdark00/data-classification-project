@@ -1,4 +1,5 @@
 tika
 loguru
 pyyaml
+spacy
 dvc[gs]

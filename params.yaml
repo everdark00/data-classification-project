@@ -2,7 +2,25 @@ base:
   log_level: DEBUG
   random_seed: 42
   log_path: logs
+  crawlers: ["colly", "google", "common"]
 
 tika:
   input_path: data/raw/
   output_path: data/interim/tika/
+
+tokenizer:
+  min_tokens: 500
+  max_symbols: 250000
+  input_path: data/interim/tika
+  output_path: data/interim/tokenizer
+  industries: [
+      "finance_banking",
+      "it_research_development",
+      "manufacturing",
+      "medical_medicine_paramedical",
+      "sales_marketing_pr",
+      "businises_corporate",
+      "hr",
+      "legal",
+      "others"
+  ]
