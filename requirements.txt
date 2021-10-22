@@ -3,3 +3,9 @@ loguru
 pyyaml
 spacy
 dvc[gs]
+lightgbm
+scikit-learn
+matplotlib
+seaborn
+pandas
+imblearn
