@@ -24,3 +24,46 @@ tokenizer:
       "legal",
       "others"
   ]
+
+train:
+  input_path: data/interim/tokenizer
+  test_size: 0.25
+  max_features: 1024
+  interim_path: data/interim/train
+  reports_path: reports/
+  models_path: models/
+  pca_components: 384
+  categories:
+    - name: "Finance&Banking"
+      files: ['Finance', 'Banks', 'Audit', 'finance_banking']
+    - name: "Legal"
+      files: [ 'Lawyers', 'legal' ]
+    - name: "IT"
+      files: [ 'IT', 'Research', 'it_research_development' ]
+    - name: "Medical"
+      files: [ 'medical_medicine_paramedical' ]
+    - name: "Businises"
+      files: [ 'businises_corporate', 'Management', 'Operations' ]
+    - name: "Sales"
+      files: [ 'Advertising & Marketing', 'Marketing', 'sales_marketing_pr' ]
+    - name: "HR"
+      files: [ 'HR' ]
+    - name: "Manufacturing"
+      files: [ 'Manufacturing', 'Auto & Truck Manufacturers', 'Manufacturing', 'Metals & Mining' ]
+    - name: "Others"
+      files: [ 'others', 'others_wiki' ]
+  lightgbm_parameters:
+    learning_rate: 0.15
+    boosting: 'gbdt'
+    max_depth: 2
+    objective: 'multiclass'
+    # num_class: len(topics)
+    num_iterations: 120
+    subsample: 0.5
+    subsample_freq: 1
+    is_unbalance: true
+    reg_lambda: 0.01
+    random_state: 42
+    early_stopping_round: 3
+    metric: [ 'multi_logloss' ]
+    verbosity: -1
