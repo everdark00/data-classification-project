@@ -47,4 +47,8 @@ stages:
           cache: false
     plots:
       - ${train.reports_path}/de/confusion.csv:
+          title: "confusion matrix"
+          template: confusion
+          x: actual
+          y: predicted
           cache: false
