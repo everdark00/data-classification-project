@@ -8,10 +8,10 @@ stages:
   tika_de:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml --locale=de
     deps:
-    - ${tika.input_path}/de
+    - ${base.data_dir}/${tika.input_path}/de
     - src/tika_parser.py
     outs:
-    - ${tika.output_path}/de
+    - ${base.data_dir}/${tika.output_path}/de
     params:
       - tika
       - base
@@ -21,10 +21,10 @@ stages:
      python -m spacy download de_core_news_sm && \
      python src/tokenizer.py --config=params.yaml --locale=de"
     deps:
-      - ${tokenizer.input_path}/de
+      - ${base.data_dir}/${tokenizer.input_path}/de
       - src/tokenizer.py
     outs:
-      - ${tokenizer.output_path}/de
+      - ${base.data_dir}/${tokenizer.output_path}/de
     params:
       - tokenizer
       - base
@@ -33,16 +33,16 @@ stages:
     cmd: "export PYTHONPATH=$PWD && \
      python src/train_model.py --config=params.yaml --locale=de"
     deps:
-      - ${train.input_path}/de
+      - ${base.data_dir}/${train.input_path}/de
       - src/train_model.py
     outs:
       - ${train.models_path}/de/tfidf.pkl
-      - ${train.interim_path}/de/tfidf_vocab.txt
-      - ${train.interim_path}/de/tfidf_idf.txt
-      - ${train.interim_path}/de/tfidf_vocab_words.txt
+      - ${base.data_dir}/${train.interim_path}/de/tfidf_vocab.txt
+      - ${base.data_dir}/${train.interim_path}/de/tfidf_idf.txt
+      - ${base.data_dir}/${train.interim_path}/de/tfidf_vocab_words.txt
       - ${train.reports_path}/de/pca_fig.pdf
       - ${train.models_path}/de/pca.pkl
-      - ${train.interim_path}/de/pca.txt
+      - ${base.data_dir}/${train.interim_path}/de/pca.txt
       - ${train.models_path}/de/model.txt
       # - ${train.reports_path}/metrics.json
       - ${train.reports_path}/de/confusion.pdf
