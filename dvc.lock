@@ -152,3 +152,15 @@ stages:
     - path: reports//de/pca_fig.pdf
       md5: f9f86c5293522ab475bf685833edabdc
       size: 12113
+  make_small_dataset:
+    cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml
+      --test_dir=data_test
+    deps:
+    - path: src/make_test_dataset.py
+      md5: fbc2eaeb3375893f17df85f5acb9aec7
+      size: 1524
+    outs:
+    - path: data_test/raw
+      md5: 5a6976a351da6930b9ad6d9a3b1e12cb.dir
+      size: 722998799
+      nfiles: 2025
