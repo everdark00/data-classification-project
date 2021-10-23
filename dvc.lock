@@ -67,3 +67,88 @@ stages:
       md5: ed5e242fd090614e17a71833f477ba93.dir
       size: 2949891730
       nfiles: 9
+  train_de:
+    cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
+      --locale=de
+    deps:
+    - path: data/interim/tokenizer/de
+      md5: ed5e242fd090614e17a71833f477ba93.dir
+      size: 2949891730
+      nfiles: 9
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+        tokenizer.industries:
+        - finance_banking
+        - it_research_development
+        - manufacturing
+        - medical_medicine_paramedical
+        - sales_marketing_pr
+        - businises_corporate
+        - hr
+        - legal
+        - others
+        train:
+          input_path: data/interim/tokenizer
+          test_size: 0.25
+          max_features: 1024
+          interim_path: data/interim/train
+          reports_path: reports/
+          models_path: models/
+          pca_components: 384
+          lightgbm_parameters:
+            learning_rate: 0.15
+            boosting: gbdt
+            max_depth: 2
+            objective: multiclass
+            num_iterations: 120
+            subsample: 0.5
+            subsample_freq: 1
+            is_unbalance: true
+            reg_lambda: 0.01
+            random_state: 42
+            early_stopping_round: 3
+            metric:
+            - multi_logloss
+            verbosity: -1
+    outs:
+    - path: data/interim/train/de/pca.txt
+      md5: 759c1aec05be8c199d3c657db0637940
+      size: 8439742
+    - path: data/interim/train/de/tfidf_idf.txt
+      md5: 5be9903e73ff76477d6bcf34154f0f6d
+      size: 18905
+    - path: data/interim/train/de/tfidf_vocab.txt
+      md5: b3e31497db1db85c9425aaf03cd30a25
+      size: 10990
+    - path: data/interim/train/de/tfidf_vocab_words.txt
+      md5: 16fa7dc4a11d2aa62bf728a73dc12d9d
+      size: 7585
+    - path: models//de/model.txt
+      md5: 65bd353acfd848dee7ac5179d97dab07
+      size: 509768
+    - path: models//de/pca.pkl
+      md5: ecbcaec5cf4ef4723a8249cfd820aa68
+      size: 3163939
+    - path: models//de/tfidf.pkl
+      md5: 4931addc335865c906e1f87832fa8f8f
+      size: 35216792
+    - path: reports//de/confusion.csv
+      md5: c109249c894a79e9023756d1c225cc93
+      size: 127217
+    - path: reports//de/confusion.pdf
+      md5: d0518df96eed0f25752768026a418fdf
+      size: 20545
+    - path: reports//de/metrics.json
+      md5: cb7c8a8d6d8edc49eae9078fcd5dd7c0
+      size: 75
+    - path: reports//de/pca_fig.pdf
+      md5: f9f86c5293522ab475bf685833edabdc
+      size: 12113
