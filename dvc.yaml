@@ -43,5 +43,8 @@ stages:
       - tokenizer.industries
       - train
     metrics:
-      - ${train.reports_path}/de/metrics.json
-      - ${train.reports_path}/de/confusion.csv
+      - ${train.reports_path}/de/metrics.json:
+          cache: false
+    plots:
+      - ${train.reports_path}/de/confusion.csv:
+          cache: false
