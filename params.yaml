@@ -3,16 +3,19 @@ base:
   random_seed: 42
   log_path: logs
   crawlers: ["colly", "google", "common"]
+  data_dir: data/
 
 tika:
-  input_path: data/raw/
-  output_path: data/interim/tika/
+  # relative to `base.data_dir`
+  input_path: raw/
+  output_path: interim/tika/
 
 tokenizer:
   min_tokens: 500
   max_symbols: 250000
-  input_path: data/interim/tika
-  output_path: data/interim/tokenizer
+  # relative to `base.data_dir`
+  input_path: interim/tika
+  output_path: interim/tokenizer
   industries: [
       "finance_banking",
       "it_research_development",
@@ -26,10 +29,12 @@ tokenizer:
   ]
 
 train:
-  input_path: data/interim/tokenizer
+  # relative to `base.data_dir`
+  input_path: interim/tokenizer
+  interim_path: interim/train
   test_size: 0.25
   max_features: 1024
-  interim_path: data/interim/train
+  # relative to project root
   reports_path: reports/
   models_path: models/
   pca_components: 384
@@ -38,7 +43,6 @@ train:
     boosting: 'gbdt'
     max_depth: 2
     objective: 'multiclass'
-    # num_class: len(topics)
     num_iterations: 120
     subsample: 0.5
     subsample_freq: 1

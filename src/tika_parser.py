@@ -53,7 +53,17 @@ if __name__ == "__main__":
         Path(config["base"]["log_path"]) / "tika_{time}.log",
         level=config["base"]["log_level"],
     )
+    src_dir = (
+        Path(config["base"]["data_dir"])
+        / Path(config["tika"]["input_path"])
+        / args.locale
+    )
+    dest_dir = (
+        Path(config["base"]["data_dir"])
+        / Path(config["tika"]["output_path"])
+        / args.locale
+    )
     main(
-        source_dir=Path(config["tika"]["input_path"]) / args.locale,
-        dest_dir=Path(config["tika"]["output_path"]) / args.locale,
+        source_dir=src_dir,
+        dest_dir=dest_dir,
     )

@@ -53,8 +53,14 @@ def tokenizer(string):
 
 def main(config: dict, locale: str):
     random_state = config["base"]["random_seed"]
-    data_path = Path(config["train"]["input_path"]) / locale
-    interim_path = Path(config["train"]["interim_path"]) / locale
+    data_path = (
+        Path(config["base"]["data_dir"]) / Path(config["train"]["input_path"]) / locale
+    )
+    interim_path = (
+        Path(config["base"]["data_dir"])
+        / Path(config["train"]["interim_path"])
+        / locale
+    )
     interim_path.mkdir(parents=True, exist_ok=True)
     models_path = Path(config["train"]["models_path"]) / locale
     models_path.mkdir(parents=True, exist_ok=True)

@@ -89,12 +89,19 @@ if __name__ == "__main__":
     )
     nlp = spacy.load(LOCALE_TO_DICT[args.locale], disable=["parser", "ner"])
 
+    src_dir = (
+        Path(config["base"]["data_dir"]) / Path(t_conf["input_path"]) / args.locale
+    )
+    dest_dir = (
+        Path(config["base"]["data_dir"]) / Path(t_conf["output_path"]) / args.locale
+    )
+
     process(
         crawlers=base_conf["crawlers"],
         industries=t_conf["industries"],
         max_symbols=t_conf["max_symbols"],
         min_tokens=t_conf["min_tokens"],
         lang=args.locale,
-        data_dir=Path(t_conf["input_path"]) / args.locale,
-        result_dir=Path(t_conf["output_path"]) / args.locale,
+        data_dir=src_dir,
+        result_dir=dest_dir,
     )
