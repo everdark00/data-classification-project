@@ -1,0 +1,69 @@
+schema: '2.0'
+stages:
+  tika_de:
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=de
+    deps:
+    - path: data/raw//de
+      md5: 65071be381cd1cca54898b81324ee189.dir
+      size: 75790954761
+      nfiles: 333115
+    - path: src/tika_parser.py
+      md5: e6868c172e17d0d8c7215c6b67487322
+      size: 2003
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+        tika:
+          input_path: data/raw/
+          output_path: data/interim/tika/
+    outs:
+    - path: data/interim/tika//de
+      md5: 1596e2d8ad9d03c3a9fed7a0102accfa.dir
+      size: 8348842833
+      nfiles: 333115
+  tokenizer_de:
+    cmd: export PYTHONPATH=$PWD && python -m spacy download de_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=de
+    deps:
+    - path: data/interim/tika/de
+      md5: 1596e2d8ad9d03c3a9fed7a0102accfa.dir
+      size: 8348842833
+      nfiles: 333115
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+        tokenizer:
+          min_tokens: 500
+          max_symbols: 250000
+          input_path: data/interim/tika
+          output_path: data/interim/tokenizer
+          industries:
+          - finance_banking
+          - it_research_development
+          - manufacturing
+          - medical_medicine_paramedical
+          - sales_marketing_pr
+          - businises_corporate
+          - hr
+          - legal
+          - others
+    outs:
+    - path: data/interim/tokenizer/de
+      md5: ed5e242fd090614e17a71833f477ba93.dir
+      size: 2949891730
+      nfiles: 9
