@@ -60,3 +60,60 @@ stages:
           x: actual
           y: predicted
           cache: false
+
+  # French localization
+  tika_fr:
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml --locale=fr
+    deps:
+    - ${base.data_dir}/${tika.input_path}/fr
+    - src/tika_parser.py
+    outs:
+    - ${base.data_dir}/${tika.output_path}/fr
+    params:
+      - tika
+      - base
+
+  tokenizer_fr:
+    cmd: "export PYTHONPATH=$PWD && \
+     python -m spacy download fr_core_news_sm && \
+     python src/tokenizer.py --config=params.yaml --locale=fr"
+    deps:
+      - ${base.data_dir}/${tokenizer.input_path}/fr
+      - src/tokenizer.py
+    outs:
+      - ${base.data_dir}/${tokenizer.output_path}/fr
+    params:
+      - tokenizer
+      - base
+
+  train_fr:
+    cmd: "export PYTHONPATH=$PWD && \
+     python src/train_model.py --config=params.yaml --locale=fr"
+    deps:
+      - ${base.data_dir}/${train.input_path}/fr
+      - src/train_model.py
+    outs:
+      - ${train.models_path}/fr/tfidf.pkl
+      - ${base.data_dir}/${train.interim_path}/fr/tfidf_vocab.txt
+      - ${base.data_dir}/${train.interim_path}/fr/tfidf_idf.txt
+      - ${base.data_dir}/${train.interim_path}/fr/tfidf_vocab_words.txt
+      - ${train.reports_path}/fr/pca_fig.pdf
+      - ${train.models_path}/fr/pca.pkl
+      - ${base.data_dir}/${train.interim_path}/fr/pca.txt
+      - ${train.models_path}/fr/model.txt
+      # - ${train.reports_path}/metrics.json
+      - ${train.reports_path}/fr/confusion.pdf
+    params:
+      - base
+      - tokenizer.industries
+      - train
+    metrics:
+      - ${train.reports_path}/fr/metrics.json:
+          cache: false
+    plots:
+      - ${train.reports_path}/fr/confusion.csv:
+          title: "confusion matrix"
+          template: confusion
+          x: actual
+          y: predicted
+          cache: false
