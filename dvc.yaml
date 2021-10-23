@@ -16,6 +16,7 @@ stages:
      python src/tokenizer.py --config=params.yaml --locale=de"
     deps:
       - ${tokenizer.input_path}/de
+      - src/tokenizer.py
     outs:
       - ${tokenizer.output_path}/de
     params:
@@ -27,6 +28,7 @@ stages:
      python src/train_model.py --config=params.yaml --locale=de"
     deps:
       - ${train.input_path}/de
+      - src/train_model.py
     outs:
       - ${train.models_path}/de/tfidf.pkl
       - ${train.interim_path}/de/tfidf_vocab.txt
