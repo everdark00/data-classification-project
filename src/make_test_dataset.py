@@ -17,6 +17,9 @@ def main(config: dict, test_dir: Path):
     dir_counter = defaultdict(int)
     for path in raw_data_path.glob("**/*"):
         new_path = new_data_path / path.relative_to(raw_data_path)
+        if new_path.name.endswith("dvc") or new_path.name.endswith(".gitignore"):
+            logger.info(f"skipping DVC file {new_path}")
+            continue
         if path.is_dir():
             logger.info(f"creating data dir {new_path}")
             new_path.mkdir(parents=True, exist_ok=True)
