@@ -22,26 +22,26 @@ stages:
       - tokenizer
       - base
 
-  train:
+  train_de:
     cmd: "export PYTHONPATH=$PWD && \
      python src/train_model.py --config=params.yaml --locale=de"
     deps:
       - ${train.input_path}/de
     outs:
-      - ${train.models_path}/tfidf.pickle
-      - ${train.interim_path}/tfidf_vocab.txt
-      - ${train.interim_path}/tfidf_idf.txt
-      - ${train.interim_path}/tfidf_vocab_words.txt
-      - ${train.reports_path}/pca_fig.pdf
-      - ${train.models_path}/pca.pickle
-      - ${train.interim_path}/pca.txt
-      - ${train.models_path}/model.txt
+      - ${train.models_path}/de/tfidf.pkl
+      - ${train.interim_path}/de/tfidf_vocab.txt
+      - ${train.interim_path}/de/tfidf_idf.txt
+      - ${train.interim_path}/de/tfidf_vocab_words.txt
+      - ${train.reports_path}/de/pca_fig.pdf
+      - ${train.models_path}/de/pca.pkl
+      - ${train.interim_path}/de/pca.txt
+      - ${train.models_path}/de/model.txt
       # - ${train.reports_path}/metrics.json
-      - ${train.reports_path}/confusion.pdf
+      - ${train.reports_path}/de/confusion.pdf
     params:
       - base
       - tokenizer.industries
       - train
     metrics:
-      - ${train.reports_path}/metrics.json
-      - ${train.reports_path}/confusion.csv
+      - ${train.reports_path}/de/metrics.json
+      - ${train.reports_path}/de/confusion.csv

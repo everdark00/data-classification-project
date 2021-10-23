@@ -33,25 +33,6 @@ train:
   reports_path: reports/
   models_path: models/
   pca_components: 384
-  categories:
-    - name: "Finance&Banking"
-      files: ['Finance', 'Banks', 'Audit', 'finance_banking']
-    - name: "Legal"
-      files: [ 'Lawyers', 'legal' ]
-    - name: "IT"
-      files: [ 'IT', 'Research', 'it_research_development' ]
-    - name: "Medical"
-      files: [ 'medical_medicine_paramedical' ]
-    - name: "Businises"
-      files: [ 'businises_corporate', 'Management', 'Operations' ]
-    - name: "Sales"
-      files: [ 'Advertising & Marketing', 'Marketing', 'sales_marketing_pr' ]
-    - name: "HR"
-      files: [ 'HR' ]
-    - name: "Manufacturing"
-      files: [ 'Manufacturing', 'Auto & Truck Manufacturers', 'Manufacturing', 'Metals & Mining' ]
-    - name: "Others"
-      files: [ 'others', 'others_wiki' ]
   lightgbm_parameters:
     learning_rate: 0.15
     boosting: 'gbdt'
