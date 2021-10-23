@@ -38,7 +38,9 @@ params.yaml     <- single place for all parameters, tunings and configurations
 requirements.txt <- package list
 ```
 
-## How to add a language
+## How to add a language (long way)
+_For quick setup read "Local development" section below._
+
 1. Create a new branch `lang/<lang>`.
 2. Create a folder `<lang>-crawler`, e.g. `es-crawler` and put `config.toml` from `de-crawler` there.
 3. Set correct paths in your new `config.toml` for data
@@ -76,6 +78,28 @@ They are tracked among git branches, reproducible and visualized.
 ### Bonus
 All metrics and plots are uploaded
 [here](https://studio.iterative.ai/user/alekseik1/views/dataclassification-crawler-e1vtfsj7dv).
+
+## Local development
+1. Create a new branch from `dev`.
+2. Set up packages
+```bash
+python -m venv venv
+# on Linux and MacOS
+source venv/bin/activate
+# on Windows
+venv/Scripts/activate # TODO check it
+# all systems
+pip install -r requirements.txt
+```
+3. Fetch small data (_all dataset is too huge_):
+```bash
+dvc fetch make_small_dataset
+dvc checkout make_small_dataset
+```
+4. You should have `data_test` directory filled with data. This directory is your primary data source!
+5. Make sure that `base.data_dir` in `params.yaml` is set to `data_test`
+6. You can now use `dvc repro` as usual. Make changes, commit experiments and have fun.
+7. Open MR to `dev` branch (**not** `main`).
 
 ## How does it work?
 DVC tracks md5 hashes to determine whether the data was changed.
