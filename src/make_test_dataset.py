@@ -10,7 +10,8 @@ from src.utils import load_config
 
 def main(config: dict, test_dir: Path):
     files_per_dir = 10
-    raw_data_path = Path(config["base"]["data_dir"]) / "raw"
+    # raw_data_path = Path(config["base"]["data_dir"]) / "raw"
+    raw_data_path = Path("data") / "raw"
     new_data_path = test_dir / "raw"
     logger.info(f"creating dir {new_data_path}")
     new_data_path.mkdir(parents=True, exist_ok=True)
