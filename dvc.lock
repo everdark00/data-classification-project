@@ -170,6 +170,6 @@ stages:
       size: 1524
     outs:
     - path: data_test/raw
-      md5: 5a6976a351da6930b9ad6d9a3b1e12cb.dir
-      size: 722998799
-      nfiles: 2025
+      md5: 0ec988ffeafd1141053b59906970c090.dir
+      size: 1288817088
+      nfiles: 4065
