@@ -2,8 +2,8 @@ base:
   log_level: DEBUG
   random_seed: 42
   log_path: logs
-  crawlers: ["colly", "google", "common"]
-  data_dir: data/
+  crawlers: [colly, google, common]
+  data_dir: data_test
 
 tika:
   # relative to `base.data_dir`
@@ -16,17 +16,8 @@ tokenizer:
   # relative to `base.data_dir`
   input_path: interim/tika
   output_path: interim/tokenizer
-  industries: [
-      "finance_banking",
-      "it_research_development",
-      "manufacturing",
-      "medical_medicine_paramedical",
-      "sales_marketing_pr",
-      "businises_corporate",
-      "hr",
-      "legal",
-      "others"
-  ]
+  industries: [finance_banking, it_research_development, manufacturing, medical_medicine_paramedical,
+    sales_marketing_pr, businises_corporate, hr, legal, others]
 
 train:
   # relative to `base.data_dir`
@@ -40,9 +31,9 @@ train:
   pca_components: 384
   lightgbm_parameters:
     learning_rate: 0.15
-    boosting: 'gbdt'
+    boosting: gbdt
     max_depth: 2
-    objective: 'multiclass'
+    objective: multiclass
     num_iterations: 120
     subsample: 0.5
     subsample_freq: 1
@@ -50,5 +41,5 @@ train:
     reg_lambda: 0.01
     random_state: 42
     early_stopping_round: 3
-    metric: [ 'multi_logloss' ]
+    metric: [multi_logloss]
     verbosity: -1
