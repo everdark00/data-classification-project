@@ -9,7 +9,7 @@ from loguru import logger
 
 from src.utils import load_config
 
-LOCALE_TO_DICT = {"de": "de_core_news_sm"}
+LOCALE_TO_DICT = {"de": "de_core_news_sm", "fr": "fr_core_news_sm"}
 
 
 def tokenizer(text):
