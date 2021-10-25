@@ -5,6 +5,7 @@ stages:
       - src/make_test_dataset.py
     outs:
       - data_test/raw
+    frozen: true
   tika_de:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml --locale=de
     deps:
