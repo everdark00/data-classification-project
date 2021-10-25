@@ -170,17 +170,17 @@ stages:
       size: 1567
     outs:
     - path: data_test/raw
-      md5: 0ec988ffeafd1141053b59906970c090.dir
-      size: 1288817088
-      nfiles: 4065
+      md5: 3039a4ee30991c39ab185ce32f00b512.dir
+      size: 2100271676
+      nfiles: 8092
   tika_fr:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=fr
     deps:
-    - path: data/raw//fr
-      md5: 90cdb249083262b434ee57d2949e7c10.dir
-      size: 88951903981
-      nfiles: 341340
+    - path: data_test/raw//fr
+      md5: 283bfba05ea5953d71a5908eced9e49a.dir
+      size: 565818289
+      nfiles: 2040
     - path: src/tika_parser.py
       md5: 1de949225b2f26c35330fb0962d52592
       size: 2183
@@ -194,15 +194,15 @@ stages:
           - colly
           - google
           - common
-          data_dir: data
+          data_dir: data_test
         tika:
           input_path: raw/
           output_path: interim/tika/
     outs:
-    - path: data/interim/tika//fr
-      md5: a05c273381b20b79ceb8f9434661cba3.dir
-      size: 8698289983
-      nfiles: 341340
+    - path: data_test/interim/tika//fr
+      md5: ec5423eee1f62095afbc83f1245cd376.dir
+      size: 52625934
+      nfiles: 2040
   tokenizer_fr:
     cmd: export PYTHONPATH=$PWD && python -m spacy download fr_core_news_sm && python
       src/tokenizer.py --config=params.yaml --locale=fr
