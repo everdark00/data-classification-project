@@ -1,0 +1,4 @@
+outs:
+- md5: f055799b51a71d97a5d99ca0b8828212
+  size: 106496
+  path: it.db
