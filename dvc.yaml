@@ -1,234 +1,235 @@
 stages:
   make_small_dataset:
-    cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml --test_dir=data_test
+    cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml
+      --test_dir=data_test
     deps:
-      - src/make_test_dataset.py
+    - src/make_test_dataset.py
     outs:
-      - data_test/raw
+    - data_test/raw
     frozen: true
   tika_de:
-    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml --locale=de
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=de
     deps:
     - ${base.data_dir}/${tika.input_path}/de
     - src/tika_parser.py
     outs:
     - ${base.data_dir}/${tika.output_path}/de
     params:
-      - tika
-      - base
+    - tika
+    - base
 
   tokenizer_de:
-    cmd: "export PYTHONPATH=$PWD && \
-     python -m spacy download de_core_news_sm && \
-     python src/tokenizer.py --config=params.yaml --locale=de"
+    cmd: export PYTHONPATH=$PWD && python -m spacy download de_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=de
     deps:
-      - ${base.data_dir}/${tokenizer.input_path}/de
-      - src/tokenizer.py
+    - ${base.data_dir}/${tokenizer.input_path}/de
+    - src/tokenizer.py
     outs:
-      - ${base.data_dir}/${tokenizer.output_path}/de
+    - ${base.data_dir}/${tokenizer.output_path}/de
     params:
-      - tokenizer
-      - base
+    - tokenizer
+    - base
 
   train_de:
-    cmd: "export PYTHONPATH=$PWD && \
-     python src/train_model.py --config=params.yaml --locale=de"
+    cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
+      --locale=de
     deps:
-      - ${base.data_dir}/${train.input_path}/de
-      - src/train_model.py
+    - ${base.data_dir}/${train.input_path}/de
+    - src/train_model.py
     outs:
-      - ${train.models_path}/de/tfidf.pkl
-      - ${base.data_dir}/${train.interim_path}/de/tfidf_vocab.txt
-      - ${base.data_dir}/${train.interim_path}/de/tfidf_idf.txt
-      - ${base.data_dir}/${train.interim_path}/de/tfidf_vocab_words.txt
-      - ${train.reports_path}/de/pca_fig.pdf
-      - ${train.models_path}/de/pca.pkl
-      - ${base.data_dir}/${train.interim_path}/de/pca.txt
-      - ${train.models_path}/de/model.txt
+    - ${train.models_path}/de/tfidf.pkl
+    - ${base.data_dir}/${train.interim_path}/de/tfidf_vocab.txt
+    - ${base.data_dir}/${train.interim_path}/de/tfidf_idf.txt
+    - ${base.data_dir}/${train.interim_path}/de/tfidf_vocab_words.txt
+    - ${train.reports_path}/de/pca_fig.pdf
+    - ${train.models_path}/de/pca.pkl
+    - ${base.data_dir}/${train.interim_path}/de/pca.txt
+    - ${train.models_path}/de/model.txt
       # - ${train.reports_path}/metrics.json
-      - ${train.reports_path}/de/confusion.pdf
+    - ${train.reports_path}/de/confusion.pdf
     params:
-      - base
-      - tokenizer.industries
-      - train
+    - base
+    - tokenizer.industries
+    - train
     metrics:
-      - ${train.reports_path}/de/metrics.json:
-          cache: false
+    - ${train.reports_path}/de/metrics.json:
+        cache: false
     plots:
-      - ${train.reports_path}/de/confusion.csv:
-          title: "confusion matrix"
-          template: confusion
-          x: actual
-          y: predicted
-          cache: false
+    - ${train.reports_path}/de/confusion.csv:
+        title: confusion matrix
+        template: confusion
+        x: actual
+        y: predicted
+        cache: false
 
   # French localization
   tika_fr:
-    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml --locale=fr
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=fr
     deps:
     - ${base.data_dir}/${tika.input_path}/fr
     - src/tika_parser.py
     outs:
     - ${base.data_dir}/${tika.output_path}/fr
     params:
-      - tika
-      - base
+    - tika
+    - base
 
   tokenizer_fr:
-    cmd: "export PYTHONPATH=$PWD && \
-     python -m spacy download fr_core_news_sm && \
-     python src/tokenizer.py --config=params.yaml --locale=fr"
+    cmd: export PYTHONPATH=$PWD && python -m spacy download fr_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=fr
     deps:
-      - ${base.data_dir}/${tokenizer.input_path}/fr
-      - src/tokenizer.py
+    - ${base.data_dir}/${tokenizer.input_path}/fr
+    - src/tokenizer.py
     outs:
-      - ${base.data_dir}/${tokenizer.output_path}/fr
+    - ${base.data_dir}/${tokenizer.output_path}/fr
     params:
-      - tokenizer
-      - base
+    - tokenizer
+    - base
 
   train_fr:
-    cmd: "export PYTHONPATH=$PWD && \
-     python src/train_model.py --config=params.yaml --locale=fr"
+    cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
+      --locale=fr
     deps:
-      - ${base.data_dir}/${train.input_path}/fr
-      - src/train_model.py
+    - ${base.data_dir}/${train.input_path}/fr
+    - src/train_model.py
     outs:
-      - ${train.models_path}/fr/tfidf.pkl
-      - ${base.data_dir}/${train.interim_path}/fr/tfidf_vocab.txt
-      - ${base.data_dir}/${train.interim_path}/fr/tfidf_idf.txt
-      - ${base.data_dir}/${train.interim_path}/fr/tfidf_vocab_words.txt
-      - ${train.reports_path}/fr/pca_fig.pdf
-      - ${train.models_path}/fr/pca.pkl
-      - ${base.data_dir}/${train.interim_path}/fr/pca.txt
-      - ${train.models_path}/fr/model.txt
+    - ${train.models_path}/fr/tfidf.pkl
+    - ${base.data_dir}/${train.interim_path}/fr/tfidf_vocab.txt
+    - ${base.data_dir}/${train.interim_path}/fr/tfidf_idf.txt
+    - ${base.data_dir}/${train.interim_path}/fr/tfidf_vocab_words.txt
+    - ${train.reports_path}/fr/pca_fig.pdf
+    - ${train.models_path}/fr/pca.pkl
+    - ${base.data_dir}/${train.interim_path}/fr/pca.txt
+    - ${train.models_path}/fr/model.txt
       # - ${train.reports_path}/metrics.json
-      - ${train.reports_path}/fr/confusion.pdf
+    - ${train.reports_path}/fr/confusion.pdf
     params:
-      - base
-      - tokenizer.industries
-      - train
+    - base
+    - tokenizer.industries
+    - train
     metrics:
-      - ${train.reports_path}/fr/metrics.json:
-          cache: false
+    - ${train.reports_path}/fr/metrics.json:
+        cache: false
     plots:
-      - ${train.reports_path}/fr/confusion.csv:
-          title: "confusion matrix"
-          template: confusion
-          x: actual
-          y: predicted
-          cache: false
+    - ${train.reports_path}/fr/confusion.csv:
+        title: confusion matrix
+        template: confusion
+        x: actual
+        y: predicted
+        cache: false
 
   # Spanish localization
   tika_es:
-    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml --locale=es
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=es
     deps:
     - ${base.data_dir}/${tika.input_path}/es
     - src/tika_parser.py
     outs:
     - ${base.data_dir}/${tika.output_path}/es
     params:
-      - tika
-      - base
+    - tika
+    - base
 
   tokenizer_es:
-    cmd: "export PYTHONPATH=$PWD && \
-     python -m spacy download es_core_news_sm && \
-     python src/tokenizer.py --config=params.yaml --locale=es"
+    cmd: export PYTHONPATH=$PWD && python -m spacy download es_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=es
     deps:
-      - ${base.data_dir}/${tokenizer.input_path}/es
-      - src/tokenizer.py
+    - ${base.data_dir}/${tokenizer.input_path}/es
+    - src/tokenizer.py
     outs:
-      - ${base.data_dir}/${tokenizer.output_path}/es
+    - ${base.data_dir}/${tokenizer.output_path}/es
     params:
-      - tokenizer
-      - base
+    - tokenizer
+    - base
 
   train_es:
-    cmd: "export PYTHONPATH=$PWD && \
-     python src/train_model.py --config=params.yaml --locale=es"
+    cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
+      --locale=es
     deps:
-      - ${base.data_dir}/${train.input_path}/es
-      - src/train_model.py
+    - ${base.data_dir}/${train.input_path}/es
+    - src/train_model.py
     outs:
-      - ${train.models_path}/es/tfidf.pkl
-      - ${base.data_dir}/${train.interim_path}/es/tfidf_vocab.txt
-      - ${base.data_dir}/${train.interim_path}/es/tfidf_idf.txt
-      - ${base.data_dir}/${train.interim_path}/es/tfidf_vocab_words.txt
-      - ${train.reports_path}/es/pca_fig.pdf
-      - ${train.models_path}/es/pca.pkl
-      - ${base.data_dir}/${train.interim_path}/es/pca.txt
-      - ${train.models_path}/es/model.txt
+    - ${train.models_path}/es/tfidf.pkl
+    - ${base.data_dir}/${train.interim_path}/es/tfidf_vocab.txt
+    - ${base.data_dir}/${train.interim_path}/es/tfidf_idf.txt
+    - ${base.data_dir}/${train.interim_path}/es/tfidf_vocab_words.txt
+    - ${train.reports_path}/es/pca_fig.pdf
+    - ${train.models_path}/es/pca.pkl
+    - ${base.data_dir}/${train.interim_path}/es/pca.txt
+    - ${train.models_path}/es/model.txt
       # - ${train.reports_path}/metrics.json
-      - ${train.reports_path}/es/confusion.pdf
+    - ${train.reports_path}/es/confusion.pdf
     params:
-      - base
-      - tokenizer.industries
-      - train
+    - base
+    - tokenizer.industries
+    - train
     metrics:
-      - ${train.reports_path}/es/metrics.json:
-          cache: false
+    - ${train.reports_path}/es/metrics.json:
+        cache: false
     plots:
-      - ${train.reports_path}/es/confusion.csv:
-          title: "confusion matrix"
-          template: confusion
-          x: actual
-          y: predicted
-          cache: false
+    - ${train.reports_path}/es/confusion.csv:
+        title: confusion matrix
+        template: confusion
+        x: actual
+        y: predicted
+        cache: false
 
   # Italian localization
   tika_it:
-    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml --locale=it
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=it
     deps:
     - ${base.data_dir}/${tika.input_path}/it
     - src/tika_parser.py
     outs:
     - ${base.data_dir}/${tika.output_path}/it
     params:
-      - tika
-      - base
+    - tika
+    - base
 
   tokenizer_it:
-    cmd: "export PYTHONPATH=$PWD && \
-     python -m spacy download it_core_news_sm && \
-     python src/tokenizer.py --config=params.yaml --locale=it"
+    cmd: export PYTHONPATH=$PWD && python -m spacy download it_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=it
     deps:
-      - ${base.data_dir}/${tokenizer.input_path}/it
-      - src/tokenizer.py
+    - ${base.data_dir}/${tokenizer.input_path}/it
+    - src/tokenizer.py
     outs:
-      - ${base.data_dir}/${tokenizer.output_path}/it
+    - ${base.data_dir}/${tokenizer.output_path}/it
     params:
-      - tokenizer
-      - base
+    - tokenizer
+    - base
 
   train_it:
-    cmd: "export PYTHONPATH=$PWD && \
-     python src/train_model.py --config=params.yaml --locale=it"
+    cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
+      --locale=it
     deps:
-      - ${base.data_dir}/${train.input_path}/it
-      - src/train_model.py
+    - ${base.data_dir}/${train.input_path}/it
+    - src/train_model.py
     outs:
-      - ${train.models_path}/it/tfidf.pkl
-      - ${base.data_dir}/${train.interim_path}/it/tfidf_vocab.txt
-      - ${base.data_dir}/${train.interim_path}/it/tfidf_idf.txt
-      - ${base.data_dir}/${train.interim_path}/it/tfidf_vocab_words.txt
-      - ${train.reports_path}/it/pca_fig.pdf
-      - ${train.models_path}/it/pca.pkl
-      - ${base.data_dir}/${train.interim_path}/it/pca.txt
-      - ${train.models_path}/it/model.txt
+    - ${train.models_path}/it/tfidf.pkl
+    - ${base.data_dir}/${train.interim_path}/it/tfidf_vocab.txt
+    - ${base.data_dir}/${train.interim_path}/it/tfidf_idf.txt
+    - ${base.data_dir}/${train.interim_path}/it/tfidf_vocab_words.txt
+    - ${train.reports_path}/it/pca_fig.pdf
+    - ${train.models_path}/it/pca.pkl
+    - ${base.data_dir}/${train.interim_path}/it/pca.txt
+    - ${train.models_path}/it/model.txt
       # - ${train.reports_path}/metrics.json
-      - ${train.reports_path}/it/confusion.pdf
+    - ${train.reports_path}/it/confusion.pdf
     params:
-      - base
-      - tokenizer.industries
-      - train
+    - base
+    - tokenizer.industries
+    - train
     metrics:
-      - ${train.reports_path}/it/metrics.json:
-          cache: false
+    - ${train.reports_path}/it/metrics.json:
+        cache: false
     plots:
-      - ${train.reports_path}/it/confusion.csv:
-          title: "confusion matrix"
-          template: confusion
-          x: actual
-          y: predicted
-          cache: false
+    - ${train.reports_path}/it/confusion.csv:
+        title: confusion matrix
+        template: confusion
+        x: actual
+        y: predicted
+        cache: false
