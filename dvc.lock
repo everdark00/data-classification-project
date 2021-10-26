@@ -166,13 +166,13 @@ stages:
       --test_dir=data_test
     deps:
     - path: src/make_test_dataset.py
-      md5: 4e20ef1eccd297616b6489620534bb13
-      size: 1567
+      md5: 369f9c4f31aa5e866b26ac0bd2784a77
+      size: 1566
     outs:
     - path: data_test/raw
-      md5: 0cae65c5eb883acfaa9d4d34fa011bdb.dir
-      size: 2100058684
-      nfiles: 8090
+      md5: 61028a947c595be60db3f480f10cebcc.dir
+      size: 298047834
+      nfiles: 848
   tika_fr:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=fr
