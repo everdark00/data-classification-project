@@ -222,15 +222,6 @@ def main(config: dict, locale: str):
         zip(y_pred_test.reshape(-1), y_test), columns=["actual", "predicted"]
     ).to_csv(reports_path / "confusion.csv", sep=",", index=False)
 
-    df = pd.DataFrame(
-        cm, index=[i for i in categories.keys()], columns=[i for i in categories.keys()]
-    )
-
-    plt.figure(figsize=(16, 9))
-    sn.heatmap(df, annot=True, fmt="d", vmax=100, cmap="OrRd")
-    plt.xticks(rotation=60, horizontalalignment="right")
-    plt.savefig(reports_path / "confusion.pdf")
-
 
 if __name__ == "__main__":
     a_parser = ArgumentParser()
