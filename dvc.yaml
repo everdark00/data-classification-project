@@ -47,7 +47,6 @@ stages:
     - ${base.data_dir}/${train.interim_path}/de/pca.txt
     - ${train.models_path}/de/model.txt
       # - ${train.reports_path}/metrics.json
-    - ${train.reports_path}/de/confusion.pdf
     params:
     - base
     - tokenizer.industries
@@ -104,7 +103,6 @@ stages:
     - ${base.data_dir}/${train.interim_path}/fr/pca.txt
     - ${train.models_path}/fr/model.txt
       # - ${train.reports_path}/metrics.json
-    - ${train.reports_path}/fr/confusion.pdf
     params:
     - base
     - tokenizer.industries
@@ -161,7 +159,6 @@ stages:
     - ${base.data_dir}/${train.interim_path}/es/pca.txt
     - ${train.models_path}/es/model.txt
       # - ${train.reports_path}/metrics.json
-    - ${train.reports_path}/es/confusion.pdf
     params:
     - base
     - tokenizer.industries
@@ -218,7 +215,6 @@ stages:
     - ${base.data_dir}/${train.interim_path}/it/pca.txt
     - ${train.models_path}/it/model.txt
       # - ${train.reports_path}/metrics.json
-    - ${train.reports_path}/it/confusion.pdf
     params:
     - base
     - tokenizer.industries
