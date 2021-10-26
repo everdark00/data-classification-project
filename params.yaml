@@ -28,7 +28,7 @@ train:
   # relative to project root
   reports_path: reports/
   models_path: models/
-  pca_components: 384
+  pca_components: 40
   lightgbm_parameters:
     learning_rate: 0.15
     boosting: gbdt
