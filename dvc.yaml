@@ -38,15 +38,12 @@ stages:
     - ${base.data_dir}/${train.input_path}/de
     - src/train_model.py
     outs:
-    - ${train.models_path}/de/tfidf.pkl
     - ${base.data_dir}/${train.interim_path}/de/tfidf_vocab.txt
     - ${base.data_dir}/${train.interim_path}/de/tfidf_idf.txt
     - ${base.data_dir}/${train.interim_path}/de/tfidf_vocab_words.txt
-    - ${train.reports_path}/de/pca_fig.pdf
     - ${train.models_path}/de/pca.pkl
     - ${base.data_dir}/${train.interim_path}/de/pca.txt
     - ${train.models_path}/de/model.txt
-      # - ${train.reports_path}/metrics.json
     params:
     - base
     - tokenizer.industries
@@ -94,11 +91,9 @@ stages:
     - ${base.data_dir}/${train.input_path}/fr
     - src/train_model.py
     outs:
-    - ${train.models_path}/fr/tfidf.pkl
     - ${base.data_dir}/${train.interim_path}/fr/tfidf_vocab.txt
     - ${base.data_dir}/${train.interim_path}/fr/tfidf_idf.txt
     - ${base.data_dir}/${train.interim_path}/fr/tfidf_vocab_words.txt
-    - ${train.reports_path}/fr/pca_fig.pdf
     - ${train.models_path}/fr/pca.pkl
     - ${base.data_dir}/${train.interim_path}/fr/pca.txt
     - ${train.models_path}/fr/model.txt
@@ -150,11 +145,9 @@ stages:
     - ${base.data_dir}/${train.input_path}/es
     - src/train_model.py
     outs:
-    - ${train.models_path}/es/tfidf.pkl
     - ${base.data_dir}/${train.interim_path}/es/tfidf_vocab.txt
     - ${base.data_dir}/${train.interim_path}/es/tfidf_idf.txt
     - ${base.data_dir}/${train.interim_path}/es/tfidf_vocab_words.txt
-    - ${train.reports_path}/es/pca_fig.pdf
     - ${train.models_path}/es/pca.pkl
     - ${base.data_dir}/${train.interim_path}/es/pca.txt
     - ${train.models_path}/es/model.txt
@@ -206,11 +199,9 @@ stages:
     - ${base.data_dir}/${train.input_path}/it
     - src/train_model.py
     outs:
-    - ${train.models_path}/it/tfidf.pkl
     - ${base.data_dir}/${train.interim_path}/it/tfidf_vocab.txt
     - ${base.data_dir}/${train.interim_path}/it/tfidf_idf.txt
     - ${base.data_dir}/${train.interim_path}/it/tfidf_vocab_words.txt
-    - ${train.reports_path}/it/pca_fig.pdf
     - ${train.models_path}/it/pca.pkl
     - ${base.data_dir}/${train.interim_path}/it/pca.txt
     - ${train.models_path}/it/model.txt

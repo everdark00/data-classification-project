@@ -114,9 +114,10 @@ def main(config: dict, locale: str):
     X_train = tfidf.fit_transform(X_train)
     X_test = tfidf.transform(X_test)
 
-    logger.info("Save trained vectorizer")
-    with open(models_path / "tfidf.pkl", "wb") as f:
-        joblib.dump(tfidf, f)
+    # TODO deterministic output
+    # logger.info("Save trained vectorizer")
+    # with open(models_path / "tfidf.pkl", "wb") as f:
+    #     joblib.dump(tfidf, f)
 
     logger.info("Save TF-IDF vocabulary")
     with open(interim_path / "tfidf_vocab.txt", "w") as f:
@@ -141,12 +142,13 @@ def main(config: dict, locale: str):
 
     logger.info("Determining a sufficient number of components")
 
-    plt.figure(figsize=(16, 9))
-    plt.plot(np.cumsum(pca.explained_variance_ratio_))
-    plt.xlabel("number of components")
-    plt.ylabel("cumulative explained variance")
-    plt.grid()
-    plt.savefig(reports_path / "pca_fig.pdf")
+    # TODO deterministic output
+    # plt.figure(figsize=(16, 9))
+    # plt.plot(np.cumsum(pca.explained_variance_ratio_))
+    # plt.xlabel("number of components")
+    # plt.ylabel("cumulative explained variance")
+    # plt.grid()
+    # plt.savefig(reports_path / "pca_fig.pdf")
 
     logger.info("Lets leave some number of components")
     pca = PCA(n_components=pca_components, random_state=random_state)
