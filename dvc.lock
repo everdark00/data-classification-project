@@ -4,7 +4,7 @@ stages:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=de
     deps:
-    - path: data//raw//de
+    - path: data/raw//de
       md5: 65071be381cd1cca54898b81324ee189.dir
       size: 75790954761
       nfiles: 333115
@@ -21,26 +21,26 @@ stages:
           - colly
           - google
           - common
-          data_dir: data/
+          data_dir: data
         tika:
           input_path: raw/
           output_path: interim/tika/
     outs:
-    - path: data//interim/tika//de
-      md5: e3d8a16f6dd0f498a269895bbb8e6fba.dir
-      size: 8348838552
+    - path: data/interim/tika//de
+      md5: c1a5a2ace58b0a2679e4f433fc9c8a68.dir
+      size: 8348823959
       nfiles: 333115
   tokenizer_de:
     cmd: export PYTHONPATH=$PWD && python -m spacy download de_core_news_sm && python
       src/tokenizer.py --config=params.yaml --locale=de
     deps:
-    - path: data//interim/tika/de
-      md5: e3d8a16f6dd0f498a269895bbb8e6fba.dir
-      size: 8348838552
+    - path: data/interim/tika/de
+      md5: c1a5a2ace58b0a2679e4f433fc9c8a68.dir
+      size: 8348823959
       nfiles: 333115
     - path: src/tokenizer.py
-      md5: 6e9af8945e75b425612501478465b0bf
-      size: 3840
+      md5: d21960ec0414a251f3585619c9598040
+      size: 3934
     params:
       params.yaml:
         base:
@@ -51,7 +51,7 @@ stages:
           - colly
           - google
           - common
-          data_dir: data/
+          data_dir: data
         tokenizer:
           min_tokens: 500
           max_symbols: 250000
@@ -68,8 +68,8 @@ stages:
           - legal
           - others
     outs:
-    - path: data//interim/tokenizer/de
-      md5: 88f2db8e90ddbc9bff7acd4f16c9995b.dir
+    - path: data/interim/tokenizer/de
+      md5: 9de9ddb5794403a84ebda82634c5a62a.dir
       size: 2949891730
       nfiles: 9
   train_de:
@@ -200,20 +200,20 @@ stages:
           output_path: interim/tika/
     outs:
     - path: data/interim/tika//fr
-      md5: a05c273381b20b79ceb8f9434661cba3.dir
-      size: 8698289983
+      md5: 3dbc49c4c011239cb056f378b7643f8e.dir
+      size: 8698283524
       nfiles: 341340
   tokenizer_fr:
     cmd: export PYTHONPATH=$PWD && python -m spacy download fr_core_news_sm && python
       src/tokenizer.py --config=params.yaml --locale=fr
     deps:
     - path: data/interim/tika/fr
-      md5: a05c273381b20b79ceb8f9434661cba3.dir
-      size: 8698289983
+      md5: 3dbc49c4c011239cb056f378b7643f8e.dir
+      size: 8698283524
       nfiles: 341340
     - path: src/tokenizer.py
-      md5: 510922add726cb3d8ab896a587a56a56
-      size: 3865
+      md5: d21960ec0414a251f3585619c9598040
+      size: 3934
     params:
       params.yaml:
         base:
@@ -242,8 +242,8 @@ stages:
           - others
     outs:
     - path: data/interim/tokenizer/fr
-      md5: fc3e4b5178e0a82462eb5c7fc228df86.dir
-      size: 2800891515
+      md5: 7fef1055e328fe85c47ee7fdaa696c96.dir
+      size: 2800908347
       nfiles: 9
   train_fr:
     cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
@@ -334,3 +334,233 @@ stages:
     - path: reports//fr/pca_fig.pdf
       md5: e200fa81e903728c72fc64ff4ac6684f
       size: 12148
+  tika_it:
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=it
+    deps:
+    - path: data/raw//it
+      md5: f91b43c20c58e309afb4561e67299303.dir
+      size: 47722809107
+      nfiles: 191210
+    - path: src/tika_parser.py
+      md5: 1de949225b2f26c35330fb0962d52592
+      size: 2183
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data
+        tika:
+          input_path: raw/
+          output_path: interim/tika/
+    outs:
+    - path: data/interim/tika//it
+      md5: 5a073eb3e79b8f9847ffab36b8198d29.dir
+      size: 4847095940
+      nfiles: 191210
+  tokenizer_it:
+    cmd: export PYTHONPATH=$PWD && python -m spacy download it_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=it
+    deps:
+    - path: data/interim/tika/it
+      md5: 5a073eb3e79b8f9847ffab36b8198d29.dir
+      size: 4847095940
+      nfiles: 191210
+    - path: src/tokenizer.py
+      md5: d21960ec0414a251f3585619c9598040
+      size: 3934
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data
+        tokenizer:
+          min_tokens: 500
+          max_symbols: 250000
+          input_path: interim/tika
+          output_path: interim/tokenizer
+          industries:
+          - finance_banking
+          - it_research_development
+          - manufacturing
+          - medical_medicine_paramedical
+          - sales_marketing_pr
+          - businises_corporate
+          - hr
+          - legal
+          - others
+    outs:
+    - path: data/interim/tokenizer/it
+      md5: 2059010462efaa10cc3672ec7a7f4f00.dir
+      size: 2157309356
+      nfiles: 9
+  train_it:
+    cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
+      --locale=it
+    deps:
+    - path: data/interim/tokenizer/it
+      md5: 2059010462efaa10cc3672ec7a7f4f00.dir
+      size: 2157309356
+      nfiles: 9
+    - path: src/train_model.py
+      md5: 241bab755a2529c8bdf585908da2d53d
+      size: 7727
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data
+        tokenizer.industries:
+        - finance_banking
+        - it_research_development
+        - manufacturing
+        - medical_medicine_paramedical
+        - sales_marketing_pr
+        - businises_corporate
+        - hr
+        - legal
+        - others
+        train:
+          input_path: interim/tokenizer
+          interim_path: interim/train
+          test_size: 0.25
+          max_features: 1024
+          reports_path: reports/
+          models_path: models/
+          pca_components: 384
+          lightgbm_parameters:
+            learning_rate: 0.15
+            boosting: gbdt
+            max_depth: 2
+            objective: multiclass
+            num_iterations: 120
+            subsample: 0.5
+            subsample_freq: 1
+            is_unbalance: true
+            reg_lambda: 0.01
+            random_state: 42
+            early_stopping_round: 3
+            metric:
+            - multi_logloss
+            verbosity: -1
+    outs:
+    - path: data/interim/train/it/pca.txt
+      md5: 1bc1cf909eabf37668b6a60a7c7d2e6c
+      size: 8424886
+    - path: data/interim/train/it/tfidf_idf.txt
+      md5: cf2c9bb8b21a11d38fb3aba1e65125f0
+      size: 18965
+    - path: data/interim/train/it/tfidf_vocab.txt
+      md5: 457c802193f9fc8c795ecbbeb83ffb38
+      size: 11006
+    - path: data/interim/train/it/tfidf_vocab_words.txt
+      md5: 5be982f971592b6d1158989bad13c79b
+      size: 7907
+    - path: models//it/model.txt
+      md5: 963f0b71e5106d4b2b155f3dd6b40fbb
+      size: 508760
+    - path: models//it/pca.pkl
+      md5: e8e375b2c36daf1c446b8487c44f5668
+      size: 3163937
+    - path: models//it/tfidf.pkl
+      md5: 9e4c6073879f54346f4f3a8856283077
+      size: 14162530
+    - path: reports//it/confusion.csv
+      md5: 5a952d1250794e9446d2e831448eaa7d
+      size: 68081
+    - path: reports//it/metrics.json
+      md5: 688d3e4c788766cdd11e228278bf4e26
+      size: 75
+    - path: reports//it/pca_fig.pdf
+      md5: 209e9634151b62f4544f349eca5963ec
+      size: 12105
+  tika_es:
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=es
+    deps:
+    - path: data/raw//es
+      md5: a0d6495d920216ede703c75b1817baf8.dir
+      size: 46119187756
+      nfiles: 334412
+    - path: src/tika_parser.py
+      md5: 1de949225b2f26c35330fb0962d52592
+      size: 2183
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data
+        tika:
+          input_path: raw/
+          output_path: interim/tika/
+    outs:
+    - path: data/interim/tika//es
+      md5: e609fe493830c55d29f52a2d235505dc.dir
+      size: 7807202360
+      nfiles: 334412
+  tokenizer_es:
+    cmd: export PYTHONPATH=$PWD && python -m spacy download es_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=es
+    deps:
+    - path: data/interim/tika/es
+      md5: e609fe493830c55d29f52a2d235505dc.dir
+      size: 7807202360
+      nfiles: 334412
+    - path: src/tokenizer.py
+      md5: d21960ec0414a251f3585619c9598040
+      size: 3934
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data
+        tokenizer:
+          min_tokens: 500
+          max_symbols: 250000
+          input_path: interim/tika
+          output_path: interim/tokenizer
+          industries:
+          - finance_banking
+          - it_research_development
+          - manufacturing
+          - medical_medicine_paramedical
+          - sales_marketing_pr
+          - businises_corporate
+          - hr
+          - legal
+          - others
+    outs:
+    - path: data/interim/tokenizer/es
+      md5: bf46b1ba80e7a6d357039f779352477e.dir
+      size: 2533331724
+      nfiles: 9
