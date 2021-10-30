@@ -81,8 +81,8 @@ stages:
       size: 3161416
       nfiles: 9
     - path: src/train_model.py
-      md5: d4397ed0518c45e9b6e1bb9258366b60
-      size: 8623
+      md5: 9f31c4e24fc9a0285e8d8e0f0eb0bf88
+      size: 9738
     params:
       params.yaml:
         base:
@@ -142,8 +142,8 @@ stages:
       md5: b5cbe729fdd46f75bc3cce3fb26b841d
       size: 8089
     - path: models//de/model.txt
-      md5: edf4149306af40cf0be3c2e13db07fd5
-      size: 5920
+      md5: ac99ed59fa2e41a6af37b3eb0e1163c1
+      size: 5922
     - path: models//de/pca.pkl
       md5: 5ca4f23356e448217d9f892fbaed64dc
       size: 271949
@@ -154,8 +154,8 @@ stages:
       md5: f4d16a1400c539b24783adfbda8df53f
       size: 75
     - path: reports//de/train_progress.json
-      md5: 8049688e3afb83a838a68c6ead0e907e
-      size: 95
+      md5: c9f04fa8063ceb1fb48476510e96b688
+      size: 2419
   make_small_dataset:
     cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml
       --test_dir=data_test
@@ -249,8 +249,8 @@ stages:
       size: 2266604
       nfiles: 9
     - path: src/train_model.py
-      md5: d4397ed0518c45e9b6e1bb9258366b60
-      size: 8623
+      md5: 9f31c4e24fc9a0285e8d8e0f0eb0bf88
+      size: 9738
     params:
       params.yaml:
         base:
@@ -310,7 +310,7 @@ stages:
       md5: 68aa00b019358c65212eeb13624439ce
       size: 7971
     - path: models//fr/model.txt
-      md5: 2acefc3e48617ea0515887fe95b93bb8
+      md5: 40492927287e4073089b9a51dc8b8a17
       size: 5865
     - path: models//fr/pca.pkl
       md5: f472f04ce9ac897ae9fb120ae96d784b
@@ -322,8 +322,8 @@ stages:
       md5: d3c059d8624b2c2a4201bb0d1c06891f
       size: 77
     - path: reports//fr/train_progress.json
-      md5: 5053bca6983a4c61be482e24ae0f9cf4
-      size: 99
+      md5: 719110c0fa4e92b924a846b269de400b
+      size: 2419
   tika_es:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=es
@@ -405,8 +405,8 @@ stages:
       size: 1957425
       nfiles: 9
     - path: src/train_model.py
-      md5: d4397ed0518c45e9b6e1bb9258366b60
-      size: 8623
+      md5: 9f31c4e24fc9a0285e8d8e0f0eb0bf88
+      size: 9738
     params:
       params.yaml:
         base:
@@ -466,8 +466,8 @@ stages:
       md5: 7cd3f7ffe278697d1ac9d44392cdafc6
       size: 7813
     - path: models//es/model.txt
-      md5: f40bde74ba59a33795749513cca2b99b
-      size: 5867
+      md5: 99930549511624dbada9bf88c52802ef
+      size: 5866
     - path: models//es/pca.pkl
       md5: 41b1249afeb93cd2be75302cbc6b98af
       size: 263733
@@ -478,8 +478,8 @@ stages:
       md5: 0c22a4d3df08bf47073b90c43ab5b1e5
       size: 77
     - path: reports//es/train_progress.json
-      md5: fd6ba3b299c81fe473647b5473b2bef1
-      size: 99
+      md5: 918517c5bcc4db1648efb626fd4afc8f
+      size: 2419
   tika_it:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=it
@@ -561,8 +561,8 @@ stages:
       size: 2420368
       nfiles: 9
     - path: src/train_model.py
-      md5: d4397ed0518c45e9b6e1bb9258366b60
-      size: 8623
+      md5: 9f31c4e24fc9a0285e8d8e0f0eb0bf88
+      size: 9738
     params:
       params.yaml:
         base:
@@ -622,8 +622,8 @@ stages:
       md5: 7803f41e48955cbce8ca3d7a186a2591
       size: 8374
     - path: models//it/model.txt
-      md5: 87c87b63d1c695f1e2d0c99efe440e67
-      size: 5704
+      md5: d63f645f5ccbb831b83a010d6735de6e
+      size: 5707
     - path: models//it/pca.pkl
       md5: 8166e196a663074fea220a5afc6c21fa
       size: 239085
@@ -634,5 +634,5 @@ stages:
       md5: 9a32b77552435173720d91be96ad1b05
       size: 77
     - path: reports//it/train_progress.json
-      md5: 40c7f61c8ba5582a3967143f35a54f55
-      size: 99
+      md5: 4d377a883d3a5a6891837da9cec8ddd4
+      size: 2419
