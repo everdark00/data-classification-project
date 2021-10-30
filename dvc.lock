@@ -81,8 +81,8 @@ stages:
       size: 3161416
       nfiles: 9
     - path: src/train_model.py
-      md5: 1d441a80761750ac2ff78c95a4befe42
-      size: 8345
+      md5: d4397ed0518c45e9b6e1bb9258366b60
+      size: 8623
     params:
       params.yaml:
         base:
@@ -153,6 +153,9 @@ stages:
     - path: reports//de/metrics.json
       md5: f4d16a1400c539b24783adfbda8df53f
       size: 75
+    - path: reports//de/train_progress.json
+      md5: 8049688e3afb83a838a68c6ead0e907e
+      size: 95
   make_small_dataset:
     cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml
       --test_dir=data_test
@@ -246,8 +249,8 @@ stages:
       size: 2266604
       nfiles: 9
     - path: src/train_model.py
-      md5: 1d441a80761750ac2ff78c95a4befe42
-      size: 8345
+      md5: d4397ed0518c45e9b6e1bb9258366b60
+      size: 8623
     params:
       params.yaml:
         base:
@@ -318,6 +321,9 @@ stages:
     - path: reports//fr/metrics.json
       md5: d3c059d8624b2c2a4201bb0d1c06891f
       size: 77
+    - path: reports//fr/train_progress.json
+      md5: 5053bca6983a4c61be482e24ae0f9cf4
+      size: 99
   tika_es:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=es
@@ -399,8 +405,8 @@ stages:
       size: 1957425
       nfiles: 9
     - path: src/train_model.py
-      md5: 1d441a80761750ac2ff78c95a4befe42
-      size: 8345
+      md5: d4397ed0518c45e9b6e1bb9258366b60
+      size: 8623
     params:
       params.yaml:
         base:
@@ -471,6 +477,9 @@ stages:
     - path: reports//es/metrics.json
       md5: 0c22a4d3df08bf47073b90c43ab5b1e5
       size: 77
+    - path: reports//es/train_progress.json
+      md5: fd6ba3b299c81fe473647b5473b2bef1
+      size: 99
   tika_it:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=it
@@ -552,8 +561,8 @@ stages:
       size: 2420368
       nfiles: 9
     - path: src/train_model.py
-      md5: 1d441a80761750ac2ff78c95a4befe42
-      size: 8345
+      md5: d4397ed0518c45e9b6e1bb9258366b60
+      size: 8623
     params:
       params.yaml:
         base:
@@ -624,3 +633,6 @@ stages:
     - path: reports//it/metrics.json
       md5: 9a32b77552435173720d91be96ad1b05
       size: 77
+    - path: reports//it/train_progress.json
+      md5: 40c7f61c8ba5582a3967143f35a54f55
+      size: 99
