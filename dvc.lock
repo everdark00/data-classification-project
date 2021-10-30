@@ -158,18 +158,6 @@ stages:
     - path: reports//de/pca_fig.pdf
       md5: 774e4ac65a46f26cd27467ddafb08073
       size: 12122
-  make_small_dataset:
-    cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml
-      --test_dir=data_test
-    deps:
-    - path: src/make_test_dataset.py
-      md5: 4e20ef1eccd297616b6489620534bb13
-      size: 1567
-    outs:
-    - path: data_test/raw
-      md5: 0ec988ffeafd1141053b59906970c090.dir
-      size: 1288817088
-      nfiles: 4065
   tika_fr:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=fr
