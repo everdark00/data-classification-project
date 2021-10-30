@@ -81,8 +81,8 @@ stages:
       size: 3161416
       nfiles: 9
     - path: src/train_model.py
-      md5: 9f31c4e24fc9a0285e8d8e0f0eb0bf88
-      size: 9738
+      md5: 033db704432d9962ed30082754216c66
+      size: 10590
     params:
       params.yaml:
         base:
@@ -114,20 +114,31 @@ stages:
           models_path: models/
           pca_explained_variance_threshold: 0.9
           lightgbm_parameters:
-            learning_rate: 0.15
-            boosting: gbdt
-            max_depth: 2
-            objective: multiclass
-            num_iterations: 120
-            subsample: 0.5
-            subsample_freq: 1
-            is_unbalance: true
-            reg_lambda: 0.01
-            random_state: 42
-            early_stopping_round: 3
+            learning_rate:
+            - 0.15
+            boosting:
+            - gbdt
+            max_depth:
+            - 2
+            - 4
+            objective:
+            - multiclass
+            num_iterations:
+            - 120
+            subsample:
+            - 0.5
+            subsample_freq:
+            - 1
+            is_unbalance:
+            - true
+            reg_lambda:
+            - 0.01
+            early_stopping_round:
+            - 3
             metric:
             - multi_logloss
-            verbosity: -1
+            verbosity:
+            - -1
     outs:
     - path: data_test/interim/train/de/pca.txt
       md5: d400472d2cc6ba8445ced6f2e1515a5f
@@ -147,15 +158,18 @@ stages:
     - path: models//de/pca.pkl
       md5: 5ca4f23356e448217d9f892fbaed64dc
       size: 271949
+    - path: reports//de/best_params.yaml
+      md5: d9aa3e7fa9f05efdfdaf6a8f1b644987
+      size: 249
     - path: reports//de/confusion.csv
       md5: 6d1f03274abefdd2d6196839656d926e
       size: 101
     - path: reports//de/metrics.json
       md5: f4d16a1400c539b24783adfbda8df53f
       size: 75
-    - path: reports//de/train_progress.json
-      md5: c9f04fa8063ceb1fb48476510e96b688
-      size: 2419
+    - path: reports//de/train_progress.csv
+      md5: 26bb3aebc6dccc4624e04a30aa5ab6d6
+      size: 2676
   make_small_dataset:
     cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml
       --test_dir=data_test
@@ -249,8 +263,8 @@ stages:
       size: 2266604
       nfiles: 9
     - path: src/train_model.py
-      md5: 9f31c4e24fc9a0285e8d8e0f0eb0bf88
-      size: 9738
+      md5: 033db704432d9962ed30082754216c66
+      size: 10590
     params:
       params.yaml:
         base:
@@ -282,20 +296,31 @@ stages:
           models_path: models/
           pca_explained_variance_threshold: 0.9
           lightgbm_parameters:
-            learning_rate: 0.15
-            boosting: gbdt
-            max_depth: 2
-            objective: multiclass
-            num_iterations: 120
-            subsample: 0.5
-            subsample_freq: 1
-            is_unbalance: true
-            reg_lambda: 0.01
-            random_state: 42
-            early_stopping_round: 3
+            learning_rate:
+            - 0.15
+            boosting:
+            - gbdt
+            max_depth:
+            - 2
+            - 4
+            objective:
+            - multiclass
+            num_iterations:
+            - 120
+            subsample:
+            - 0.5
+            subsample_freq:
+            - 1
+            is_unbalance:
+            - true
+            reg_lambda:
+            - 0.01
+            early_stopping_round:
+            - 3
             metric:
             - multi_logloss
-            verbosity: -1
+            verbosity:
+            - -1
     outs:
     - path: data_test/interim/train/fr/pca.txt
       md5: b84268a5551d0ad170da8cf62088c112
@@ -315,15 +340,18 @@ stages:
     - path: models//fr/pca.pkl
       md5: f472f04ce9ac897ae9fb120ae96d784b
       size: 263733
+    - path: reports//fr/best_params.yaml
+      md5: d9aa3e7fa9f05efdfdaf6a8f1b644987
+      size: 249
     - path: reports//fr/confusion.csv
       md5: d2ba15bc6e99dfd1e05e83131b51d180
       size: 93
     - path: reports//fr/metrics.json
       md5: d3c059d8624b2c2a4201bb0d1c06891f
       size: 77
-    - path: reports//fr/train_progress.json
-      md5: 719110c0fa4e92b924a846b269de400b
-      size: 2419
+    - path: reports//fr/train_progress.csv
+      md5: 9fee8723f2e59e1965742acef6776da6
+      size: 2676
   tika_es:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=es
@@ -405,8 +433,8 @@ stages:
       size: 1957425
       nfiles: 9
     - path: src/train_model.py
-      md5: 9f31c4e24fc9a0285e8d8e0f0eb0bf88
-      size: 9738
+      md5: 033db704432d9962ed30082754216c66
+      size: 10590
     params:
       params.yaml:
         base:
@@ -438,20 +466,31 @@ stages:
           models_path: models/
           pca_explained_variance_threshold: 0.9
           lightgbm_parameters:
-            learning_rate: 0.15
-            boosting: gbdt
-            max_depth: 2
-            objective: multiclass
-            num_iterations: 120
-            subsample: 0.5
-            subsample_freq: 1
-            is_unbalance: true
-            reg_lambda: 0.01
-            random_state: 42
-            early_stopping_round: 3
+            learning_rate:
+            - 0.15
+            boosting:
+            - gbdt
+            max_depth:
+            - 2
+            - 4
+            objective:
+            - multiclass
+            num_iterations:
+            - 120
+            subsample:
+            - 0.5
+            subsample_freq:
+            - 1
+            is_unbalance:
+            - true
+            reg_lambda:
+            - 0.01
+            early_stopping_round:
+            - 3
             metric:
             - multi_logloss
-            verbosity: -1
+            verbosity:
+            - -1
     outs:
     - path: data_test/interim/train/es/pca.txt
       md5: 1f1faecb5bc35b99ce346bf7a115d672
@@ -471,15 +510,18 @@ stages:
     - path: models//es/pca.pkl
       md5: 41b1249afeb93cd2be75302cbc6b98af
       size: 263733
+    - path: reports//es/best_params.yaml
+      md5: d9aa3e7fa9f05efdfdaf6a8f1b644987
+      size: 249
     - path: reports//es/confusion.csv
       md5: 5200d7456872f036909887391331ca9d
       size: 93
     - path: reports//es/metrics.json
       md5: 0c22a4d3df08bf47073b90c43ab5b1e5
       size: 77
-    - path: reports//es/train_progress.json
-      md5: 918517c5bcc4db1648efb626fd4afc8f
-      size: 2419
+    - path: reports//es/train_progress.csv
+      md5: af54dc558bd994d36746981cd38f55ec
+      size: 2676
   tika_it:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=it
@@ -561,8 +603,8 @@ stages:
       size: 2420368
       nfiles: 9
     - path: src/train_model.py
-      md5: 9f31c4e24fc9a0285e8d8e0f0eb0bf88
-      size: 9738
+      md5: 033db704432d9962ed30082754216c66
+      size: 10590
     params:
       params.yaml:
         base:
@@ -594,20 +636,31 @@ stages:
           models_path: models/
           pca_explained_variance_threshold: 0.9
           lightgbm_parameters:
-            learning_rate: 0.15
-            boosting: gbdt
-            max_depth: 2
-            objective: multiclass
-            num_iterations: 120
-            subsample: 0.5
-            subsample_freq: 1
-            is_unbalance: true
-            reg_lambda: 0.01
-            random_state: 42
-            early_stopping_round: 3
+            learning_rate:
+            - 0.15
+            boosting:
+            - gbdt
+            max_depth:
+            - 2
+            - 4
+            objective:
+            - multiclass
+            num_iterations:
+            - 120
+            subsample:
+            - 0.5
+            subsample_freq:
+            - 1
+            is_unbalance:
+            - true
+            reg_lambda:
+            - 0.01
+            early_stopping_round:
+            - 3
             metric:
             - multi_logloss
-            verbosity: -1
+            verbosity:
+            - -1
     outs:
     - path: data_test/interim/train/it/pca.txt
       md5: 88417dbaa9f1ece18506fd94b5522b49
@@ -627,12 +680,15 @@ stages:
     - path: models//it/pca.pkl
       md5: 8166e196a663074fea220a5afc6c21fa
       size: 239085
+    - path: reports//it/best_params.yaml
+      md5: d9aa3e7fa9f05efdfdaf6a8f1b644987
+      size: 249
     - path: reports//it/confusion.csv
       md5: 610830296f532559bae58fe3ed07100c
       size: 89
     - path: reports//it/metrics.json
       md5: 9a32b77552435173720d91be96ad1b05
       size: 77
-    - path: reports//it/train_progress.json
-      md5: 4d377a883d3a5a6891837da9cec8ddd4
-      size: 2419
+    - path: reports//it/train_progress.csv
+      md5: ec2f43d9aa7a942d6d788d5cff8035c7
+      size: 2676
