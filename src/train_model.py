@@ -52,17 +52,30 @@ class PrecisionPCA(BaseEstimator, TransformerMixin):
 
 
 class LightGbmCpp(BaseEstimator, ClassifierMixin):
-    def __init__(self, **params: dict):
+    def __init__(
+        self, validate_size: float = 0.2, random_state: int = 42, **params: dict
+    ):
         self.params = params
         self.evals_result = {}
+        self.validate_size = validate_size
+        self.random_state = random_state
         self.bst = None  # type: lgb.Booster
 
     def fit(self, X, y):
-        train_data = lgb.Dataset(X, label=y, free_raw_data=False)
+        X_train, X_validate, y_train, y_validate = train_test_split(
+            X,
+            y,
+            test_size=self.validate_size,
+            random_state=self.random_state,
+        )
+        train_data = lgb.Dataset(X_train, label=y_train, free_raw_data=False)
+        validate_data = lgb.Dataset(
+            X_validate, label=y_validate, reference=train_data, free_raw_data=False
+        )
         self.bst = lgb.train(
             self.params,
             train_data,
-            valid_sets=[train_data],
+            valid_sets=[validate_data],
             valid_names=["training"],
             evals_result=self.evals_result,
         )
@@ -76,10 +89,16 @@ class LightGbmCpp(BaseEstimator, ClassifierMixin):
     # HACK: keep all params as a dict rather than class fields for LightGBM lib compatibility
     def set_params(self, **params):
         # super().set_params(**params)
+        self.random_state = params["random_state"]
+        self.validate_size = params["validate_size"]
         self.params = params
 
     def get_params(self, deep=True):
-        return self.params
+        return {
+            **self.params,
+            "random_state": self.random_state,
+            "validate_size": self.validate_size,
+        }
 
 
 categories_all = {
@@ -245,20 +264,11 @@ def main(config: dict, locale: str):
 
     logger.info("reading data")
     all_data, y, topics = read_data(config, locale)
-    classifier_grid["num_class"] = [len(topics)]
-    classifier_grid["random_state"] = [random_state]
     logger.info("train/test split")
     X_train, X_test, y_train, y_test = train_test_split(
         all_data,
         y,
         test_size=test_size,
-        random_state=random_state,
-    )
-
-    X_train, X_validate, y_train, y_validate = train_test_split(
-        X_train,
-        y_train,
-        test_size=validate_size,
         random_state=random_state,
     )
 
@@ -276,11 +286,17 @@ def main(config: dict, locale: str):
                     random_state=random_state, variance_threshold=pca_threshold
                 ),
             ),
-            ("classifier", LightGbmCpp()),
+            (
+                "classifier",
+                LightGbmCpp(),
+            ),
         ]
     )
 
     logger.info("Fitting pipeline")
+    classifier_grid["num_class"] = [len(topics)]
+    classifier_grid["random_state"] = [random_state]
+    classifier_grid["validate_size"] = [validate_size]
     cv_grid = {f"classifier__{key}": value for key, value in classifier_grid.items()}
     cv = GridSearchCV(estimator=pipeline, param_grid=cv_grid)
     cv.fit(X_train, y_train)
