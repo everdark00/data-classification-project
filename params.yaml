@@ -24,11 +24,12 @@ train:
   input_path: interim/tokenizer
   interim_path: interim/train
   test_size: 0.25
+  validate_size: 0.2
   max_features: 1024
   # relative to project root
   reports_path: reports/
   models_path: models/
-  pca_components: 40
+  pca_explained_variance_threshold: 0.9
   lightgbm_parameters:
     learning_rate: 0.15
     boosting: gbdt

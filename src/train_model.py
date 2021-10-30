@@ -67,7 +67,9 @@ def main(config: dict, locale: str):
     reports_path = Path(config["train"]["reports_path"]) / locale
     reports_path.mkdir(parents=True, exist_ok=True)
 
-    pca_components = config["train"]["pca_components"]
+    pca_explained_variance_threshold = config["train"][
+        "pca_explained_variance_threshold"
+    ]
 
     data, topics, categories = [], [], {}
     # Only found in tokenizer results are considered
@@ -151,6 +153,12 @@ def main(config: dict, locale: str):
     # plt.savefig(reports_path / "pca_fig.pdf")
 
     logger.info("Lets leave some number of components")
+    # take minimal number of components required to achiev `pca_explained_variance_threshold`
+    pca_components = np.min(
+        np.argwhere(
+            np.cumsum(pca.explained_variance_ratio_) > pca_explained_variance_threshold
+        )
+    )
     pca = PCA(n_components=pca_components, random_state=random_state)
 
     X_train = pca.fit_transform(X_train.toarray())
