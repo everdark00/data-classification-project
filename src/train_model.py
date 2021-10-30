@@ -13,7 +13,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.pipeline import Pipeline
 
 from src.utils import load_config
@@ -51,7 +51,7 @@ class PrecisionPCA(BaseEstimator, TransformerMixin):
 
 
 class LightGbmCpp(BaseEstimator, ClassifierMixin):
-    def __init__(self, params: dict):
+    def __init__(self, **params: dict):
         self.params = params
         self.evals_result = {}
         self.bst = None  # type: lgb.Booster
@@ -62,18 +62,24 @@ class LightGbmCpp(BaseEstimator, ClassifierMixin):
             self.params,
             train_data,
             valid_sets=[train_data],
+            valid_names=["training"],
             evals_result=self.evals_result,
         )
 
     def predict(self, X):
-        return self.bst.predict(X)
+        preds = self.bst.predict(X)
+        if len(preds.shape) > 1:
+            preds = np.argmax(preds, axis=1)
+        return preds
 
+    # HACK: keep all params as a dict rather than class fields for LightGBM lib compatibility
+    def set_params(self, **params):
+        # super().set_params(**params)
+        self.params = params
 
-# %% md
+    def get_params(self, deep=True):
+        return self.params
 
-# Data processing
-
-# %%
 
 categories_all = {
     "Finance&Banking": {"Finance", "Banks", "Audit", "finance_banking"},
@@ -174,7 +180,7 @@ def save_report(
     reports_path.mkdir(parents=True, exist_ok=True)
     logger.info("Saving train report for DVC")
     with open(reports_path / "train_progress.json", "w") as f:
-        # NOTE: hardcoded name, retrieved it from debugger
+        # NOTE: same as `valid_names` in class definition
         json.dump(classifier.evals_result["training"], f)
     logger.info("Accuracy score")
     score_train = accuracy_score(y_pred_train, y_train)
@@ -187,18 +193,10 @@ def save_report(
     ).to_csv(reports_path / "confusion.csv", sep=",", index=False)
 
 
-def main(config: dict, locale: str):
-    random_state = config["base"]["random_seed"]
+def read_data(config: dict, locale: str):
     data_path = (
         Path(config["base"]["data_dir"]) / Path(config["train"]["input_path"]) / locale
     )
-    reports_path = Path(config["train"]["reports_path"]) / locale
-    reports_path.mkdir(parents=True, exist_ok=True)
-
-    pca_explained_variance_threshold = config["train"][
-        "pca_explained_variance_threshold"
-    ]
-
     data, topics, categories = [], [], {}
     # Only found in tokenizer results are considered
     available_files = config["tokenizer"]["industries"]
@@ -223,25 +221,37 @@ def main(config: dict, locale: str):
     y = []
     for i in range(len(topics)):
         y += [i] * len(data[i])
+    return all_data, y, topics
 
+
+def main(config: dict, locale: str):
+    random_state = config["base"]["random_seed"]
+    max_features = config["train"]["max_features"]
+    pca_threshold = config["train"]["pca_explained_variance_threshold"]
+    test_size, validate_size = (
+        config["train"]["test_size"],
+        config["train"]["validate_size"],
+    )
+    classifier_grid = config["train"]["lightgbm_parameters"]
+
+    logger.info("reading data")
+    all_data, y, topics = read_data(config, locale)
+    classifier_grid["num_class"] = [len(topics)]
     logger.info("train/test split")
     X_train, X_test, y_train, y_test = train_test_split(
         all_data,
         y,
-        test_size=config["train"]["test_size"],
+        test_size=test_size,
         random_state=random_state,
     )
 
     X_train, X_validate, y_train, y_validate = train_test_split(
         X_train,
         y_train,
-        test_size=config["train"]["validate_size"],
+        test_size=validate_size,
         random_state=random_state,
     )
 
-    max_features = config["train"]["max_features"]
-    params = config["train"]["lightgbm_parameters"]
-    params["num_class"] = len(topics)
     pipeline = Pipeline(
         [
             (
@@ -253,30 +263,26 @@ def main(config: dict, locale: str):
             (
                 "pca",
                 PrecisionPCA(
-                    random_state=random_state,
-                    variance_threshold=pca_explained_variance_threshold,
+                    random_state=random_state, variance_threshold=pca_threshold
                 ),
             ),
-            (
-                "classifier",
-                LightGbmCpp(params=params),
-            ),
+            ("classifier", LightGbmCpp()),
         ]
     )
 
     logger.info("Fitting pipeline")
-    pipeline.fit(X_train, y_train)
+    cv_grid = {f"classifier__{key}": value for key, value in classifier_grid.items()}
+    cv = GridSearchCV(estimator=pipeline, param_grid=cv_grid)
+    cv.fit(X_train, y_train)
     logger.info("Get predicted lables")
-    y_pred_train = pipeline.predict(X_train)
-    y_pred_test = pipeline.predict(X_test)
-    y_pred_train = np.argmax(y_pred_train, axis=1)
-    y_pred_test = np.argmax(y_pred_test, axis=1)
+    y_pred_train = cv.predict(X_train)
+    y_pred_test = cv.predict(X_test)
 
-    save_models(config, locale, pipeline)
+    save_models(config, locale, cv.best_estimator_)
     save_report(
         config=config,
         locale=locale,
-        pipeline=pipeline,
+        pipeline=cv.best_estimator_,
         y_train=y_train,
         y_test=y_test,
         y_pred_train=y_pred_train,
