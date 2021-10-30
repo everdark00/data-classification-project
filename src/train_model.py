@@ -236,8 +236,6 @@ def main(config: dict, locale: str):
     with open(reports_path / "metrics.json", "w") as f:
         json.dump({"accuracy_train": score_train, "accuracy_test": score_test}, f)
 
-    logger.info("Confusion matrix")
-    cm = confusion_matrix(y_pred_test, y_test)
     logger.info("Save for DVC")
     pd.DataFrame(
         zip(y_pred_test.reshape(-1), y_test), columns=["actual", "predicted"]
