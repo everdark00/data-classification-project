@@ -52,14 +52,18 @@ stages:
     metrics:
     - ${train.reports_path}/de/metrics.json:
         cache: false
-    - ${train.reports_path}/de/train_progress.json:
-        cache: false
     plots:
     - ${train.reports_path}/de/confusion.csv:
         title: confusion matrix
         template: confusion
         x: actual
         y: predicted
+        cache: false
+    - ${train.reports_path}/de/train_progress.csv:
+        title: train progress
+        template: default
+        y: ${train.lightgbm_parameters.metric[0]}
+        x: iteration
         cache: false
 
   # French localization
@@ -109,14 +113,18 @@ stages:
     metrics:
     - ${train.reports_path}/fr/metrics.json:
         cache: false
-    - ${train.reports_path}/fr/train_progress.json:
-        cache: false
     plots:
     - ${train.reports_path}/fr/confusion.csv:
         title: confusion matrix
         template: confusion
         x: actual
         y: predicted
+        cache: false
+    - ${train.reports_path}/fr/train_progress.csv:
+        title: train progress
+        template: default
+        y: ${train.lightgbm_parameters.metric[0]}
+        x: iteration
         cache: false
 
   # Spanish localization
@@ -166,14 +174,18 @@ stages:
     metrics:
     - ${train.reports_path}/es/metrics.json:
         cache: false
-    - ${train.reports_path}/es/train_progress.json:
-        cache: false
     plots:
     - ${train.reports_path}/es/confusion.csv:
         title: confusion matrix
         template: confusion
         x: actual
         y: predicted
+        cache: false
+    - ${train.reports_path}/es/train_progress.csv:
+        title: train progress
+        template: default
+        y: ${train.lightgbm_parameters.metric[0]}
+        x: iteration
         cache: false
 
   # Italian localization
@@ -223,12 +235,16 @@ stages:
     metrics:
     - ${train.reports_path}/it/metrics.json:
         cache: false
-    - ${train.reports_path}/it/train_progress.json:
-        cache: false
     plots:
     - ${train.reports_path}/it/confusion.csv:
         title: confusion matrix
         template: confusion
         x: actual
         y: predicted
+        cache: false
+    - ${train.reports_path}/it/train_progress.csv:
+        title: train progress
+        template: default
+        y: ${train.lightgbm_parameters.metric[0]}
+        x: iteration
         cache: false

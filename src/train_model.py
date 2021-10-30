@@ -178,11 +178,16 @@ def save_report(
 ):
     classifier = pipeline.named_steps["classifier"]  # type: LightGbmCpp
     reports_path = Path(config["train"]["reports_path"]) / locale
+    target_metric = classifier.params["metric"]
     reports_path.mkdir(parents=True, exist_ok=True)
     logger.info("Saving train report for DVC")
-    with open(reports_path / "train_progress.json", "w") as f:
-        # NOTE: same as `valid_names` in class definition
-        json.dump(classifier.evals_result["training"], f)
+    # NOTE: same as `valid_names` in class definition
+    train_info = classifier.evals_result["training"][target_metric]
+    y = train_info
+    x = list(range(1, len(y) + 1))
+    pd.DataFrame(y, index=x, columns=[target_metric]).to_csv(
+        reports_path / "train_progress.csv", index_label="iteration"
+    )
     logger.info("Accuracy score")
     score_train = accuracy_score(y_pred_train, y_train)
     score_test = accuracy_score(y_pred_test, y_test)
