@@ -104,6 +104,13 @@ def main(config: dict, locale: str):
         random_state=random_state,
     )
 
+    X_train, X_validate, y_train, y_validate = train_test_split(
+        X_train,
+        y_train,
+        test_size=config["train"]["validate_size"],
+        random_state=random_state,
+    )
+
     logger.info("Data vectorization using tfidf")
 
     max_features = config["train"]["max_features"]
@@ -114,6 +121,7 @@ def main(config: dict, locale: str):
     # We fit vectorizer only on training data
 
     X_train = tfidf.fit_transform(X_train)
+    X_validate = tfidf.transform(X_validate)
     X_test = tfidf.transform(X_test)
 
     # TODO deterministic output
@@ -163,6 +171,7 @@ def main(config: dict, locale: str):
 
     X_train = pca.fit_transform(X_train.toarray())
     X_test = pca.transform(X_test.toarray())
+    X_validate = pca.transform(X_validate.toarray())
 
     logger.info("Saving PCA model")
 
@@ -196,7 +205,9 @@ def main(config: dict, locale: str):
     # Model
     logger.info("Creating datasets objects for LightGBM")
     train_data = lgb.Dataset(X_train, label=y_train, free_raw_data=False)
-    test_data = lgb.Dataset(X_test, y_test, reference=train_data, free_raw_data=False)
+    validate_data = lgb.Dataset(
+        X_validate, y_validate, reference=train_data, free_raw_data=False
+    )
 
     ## Set model parameters
 
@@ -206,7 +217,7 @@ def main(config: dict, locale: str):
     params["num_class"] = len(topics)
 
     logger.info("Train and save model")
-    bst = lgb.train(params, train_data, valid_sets=[test_data])
+    bst = lgb.train(params, train_data, valid_sets=[validate_data])
     bst.save_model(models_path / "model.txt", num_iteration=bst.best_iteration)
     bst = lgb.Booster(model_file=models_path / "model.txt")
 
