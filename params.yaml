@@ -24,22 +24,22 @@ train:
   input_path: interim/tokenizer
   interim_path: interim/train
   test_size: 0.25
+  validate_size: 0.2
   max_features: 1024
   # relative to project root
   reports_path: reports/
   models_path: models/
-  pca_components: 384
+  pca_explained_variance_threshold: 0.9
   lightgbm_parameters:
-    learning_rate: 0.15
-    boosting: gbdt
-    max_depth: 2
-    objective: multiclass
-    num_iterations: 120
-    subsample: 0.5
-    subsample_freq: 1
-    is_unbalance: true
-    reg_lambda: 0.01
-    random_state: 42
-    early_stopping_round: 3
+    learning_rate: [0.15]
+    boosting: [gbdt]
+    max_depth: [2, 4]
+    objective: [multiclass]
+    num_iterations: [120]
+    subsample: [0.5]
+    subsample_freq: [1]
+    is_unbalance: [true]
+    reg_lambda: [0.01]
+    early_stopping_round: [3]
     metric: [multi_logloss]
-    verbosity: -1
+    verbosity: [-1]

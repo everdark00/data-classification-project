@@ -38,15 +38,13 @@ stages:
     - ${base.data_dir}/${train.input_path}/de
     - src/train_model.py
     outs:
-    - ${train.models_path}/de/tfidf.pkl
     - ${base.data_dir}/${train.interim_path}/de/tfidf_vocab.txt
     - ${base.data_dir}/${train.interim_path}/de/tfidf_idf.txt
     - ${base.data_dir}/${train.interim_path}/de/tfidf_vocab_words.txt
-    - ${train.reports_path}/de/pca_fig.pdf
     - ${train.models_path}/de/pca.pkl
     - ${base.data_dir}/${train.interim_path}/de/pca.txt
     - ${train.models_path}/de/model.txt
-      # - ${train.reports_path}/metrics.json
+    - ${train.reports_path}/de/best_params.yaml
     params:
     - base
     - tokenizer.industries
@@ -60,6 +58,12 @@ stages:
         template: confusion
         x: actual
         y: predicted
+        cache: false
+    - ${train.reports_path}/de/train_progress.csv:
+        title: train progress
+        template: default
+        y: ${train.lightgbm_parameters.metric[0]}
+        x: iteration
         cache: false
 
   # French localization
@@ -94,14 +98,13 @@ stages:
     - ${base.data_dir}/${train.input_path}/fr
     - src/train_model.py
     outs:
-    - ${train.models_path}/fr/tfidf.pkl
     - ${base.data_dir}/${train.interim_path}/fr/tfidf_vocab.txt
     - ${base.data_dir}/${train.interim_path}/fr/tfidf_idf.txt
     - ${base.data_dir}/${train.interim_path}/fr/tfidf_vocab_words.txt
-    - ${train.reports_path}/fr/pca_fig.pdf
     - ${train.models_path}/fr/pca.pkl
     - ${base.data_dir}/${train.interim_path}/fr/pca.txt
     - ${train.models_path}/fr/model.txt
+    - ${train.reports_path}/fr/best_params.yaml
       # - ${train.reports_path}/metrics.json
     params:
     - base
@@ -116,6 +119,12 @@ stages:
         template: confusion
         x: actual
         y: predicted
+        cache: false
+    - ${train.reports_path}/fr/train_progress.csv:
+        title: train progress
+        template: default
+        y: ${train.lightgbm_parameters.metric[0]}
+        x: iteration
         cache: false
 
   # Spanish localization
@@ -150,14 +159,13 @@ stages:
     - ${base.data_dir}/${train.input_path}/es
     - src/train_model.py
     outs:
-    - ${train.models_path}/es/tfidf.pkl
     - ${base.data_dir}/${train.interim_path}/es/tfidf_vocab.txt
     - ${base.data_dir}/${train.interim_path}/es/tfidf_idf.txt
     - ${base.data_dir}/${train.interim_path}/es/tfidf_vocab_words.txt
-    - ${train.reports_path}/es/pca_fig.pdf
     - ${train.models_path}/es/pca.pkl
     - ${base.data_dir}/${train.interim_path}/es/pca.txt
     - ${train.models_path}/es/model.txt
+    - ${train.reports_path}/es/best_params.yaml
       # - ${train.reports_path}/metrics.json
     params:
     - base
@@ -172,6 +180,12 @@ stages:
         template: confusion
         x: actual
         y: predicted
+        cache: false
+    - ${train.reports_path}/es/train_progress.csv:
+        title: train progress
+        template: default
+        y: ${train.lightgbm_parameters.metric[0]}
+        x: iteration
         cache: false
 
   # Italian localization
@@ -206,14 +220,13 @@ stages:
     - ${base.data_dir}/${train.input_path}/it
     - src/train_model.py
     outs:
-    - ${train.models_path}/it/tfidf.pkl
     - ${base.data_dir}/${train.interim_path}/it/tfidf_vocab.txt
     - ${base.data_dir}/${train.interim_path}/it/tfidf_idf.txt
     - ${base.data_dir}/${train.interim_path}/it/tfidf_vocab_words.txt
-    - ${train.reports_path}/it/pca_fig.pdf
     - ${train.models_path}/it/pca.pkl
     - ${base.data_dir}/${train.interim_path}/it/pca.txt
     - ${train.models_path}/it/model.txt
+    - ${train.reports_path}/it/best_params.yaml
       # - ${train.reports_path}/metrics.json
     params:
     - base
@@ -228,4 +241,10 @@ stages:
         template: confusion
         x: actual
         y: predicted
+        cache: false
+    - ${train.reports_path}/it/train_progress.csv:
+        title: train progress
+        template: default
+        y: ${train.lightgbm_parameters.metric[0]}
+        x: iteration
         cache: false

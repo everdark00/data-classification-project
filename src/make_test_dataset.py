@@ -9,7 +9,7 @@ from src.utils import load_config
 
 
 def main(config: dict, test_dir: Path):
-    files_per_dir = 10
+    files_per_dir = 1
     # raw_data_path = Path(config["base"]["data_dir"]) / "raw"
     raw_data_path = Path("data") / "raw"
     new_data_path = test_dir / "raw"
