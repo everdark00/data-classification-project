@@ -51,6 +51,8 @@ stages:
     metrics:
     - ${train.reports_path}/de/metrics.json:
         cache: false
+    - ${train.reports_path}/de/train_progress.json:
+        cache: false
     plots:
     - ${train.reports_path}/de/confusion.csv:
         title: confusion matrix
@@ -104,6 +106,8 @@ stages:
     - train
     metrics:
     - ${train.reports_path}/fr/metrics.json:
+        cache: false
+    - ${train.reports_path}/fr/train_progress.json:
         cache: false
     plots:
     - ${train.reports_path}/fr/confusion.csv:
@@ -159,6 +163,8 @@ stages:
     metrics:
     - ${train.reports_path}/es/metrics.json:
         cache: false
+    - ${train.reports_path}/es/train_progress.json:
+        cache: false
     plots:
     - ${train.reports_path}/es/confusion.csv:
         title: confusion matrix
@@ -212,6 +218,8 @@ stages:
     - train
     metrics:
     - ${train.reports_path}/it/metrics.json:
+        cache: false
+    - ${train.reports_path}/it/train_progress.json:
         cache: false
     plots:
     - ${train.reports_path}/it/confusion.csv:

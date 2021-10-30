@@ -217,10 +217,17 @@ def main(config: dict, locale: str):
     params["num_class"] = len(topics)
 
     logger.info("Train and save model")
-    bst = lgb.train(params, train_data, valid_sets=[validate_data])
+    evals_result = {}
+    bst = lgb.train(
+        params, train_data, valid_sets=[validate_data], evals_result=evals_result
+    )
     bst.save_model(models_path / "model.txt", num_iteration=bst.best_iteration)
     bst = lgb.Booster(model_file=models_path / "model.txt")
 
+    logger.info("Saving train report for DVC")
+    with open(reports_path / "train_progress.json", "w") as f:
+        # NOTE: hardcoded name, retrieved it from debugger
+        json.dump(evals_result["valid_0"], f)
     # Model quality
     logger.info("Get predicted lables")
     y_pred_train = bst.predict(X_train)
