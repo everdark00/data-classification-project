@@ -10,12 +10,70 @@ import numpy as np
 import pandas as pd
 import seaborn as sn
 from loguru import logger
+from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
 
 from src.utils import load_config
+
+
+class PrecisionPCA(BaseEstimator, TransformerMixin):
+    def __init__(self, variance_threshold: float = 0.9, random_state: int = 42):
+        self.variance_threshold = variance_threshold
+        self.random_state = random_state
+        self._tmp_pca = PCA()
+        self._pca = PCA()
+
+    def fit(self, X, y):
+        self._tmp_pca = PCA(random_state=self.random_state)
+        self._tmp_pca.fit(X.toarray())
+        logger.info(
+            f"Determining a sufficient number of components for threshold={self.variance_threshold}"
+        )
+        # take minimal number of components required to achieve `pca_explained_variance_threshold`
+        pca_components = np.min(
+            np.argwhere(
+                np.cumsum(self._tmp_pca.explained_variance_ratio_)
+                > self.variance_threshold
+            )
+        )
+        logger.info(
+            f"Leaving {pca_components} components by threshold={self.variance_threshold}"
+        )
+        self._pca = PCA(n_components=pca_components, random_state=self.random_state)
+        self._pca.fit(X.toarray())
+        return self
+
+    def transform(self, X):
+        return self._pca.transform(X.toarray())
+
+
+class LightGbmCpp(BaseEstimator, ClassifierMixin):
+    def __init__(self, X_validate, y_validate, params: dict):
+        self.x_val = X_validate
+        self.y_val = y_validate
+        self.params = params
+        self.evals_result = {}
+        self.bst = None
+
+    def fit(self, X, y):
+        train_data = lgb.Dataset(X, label=y, free_raw_data=False)
+        validate_data = lgb.Dataset(
+            self.x_val, self.y_val, reference=train_data, free_raw_data=False
+        )
+        self.bst = lgb.train(
+            self.params,
+            train_data,
+            valid_sets=[validate_data],
+            evals_result=self.evals_result,
+        )
+
+    def predict(self, X):
+        pass
+
 
 # %% md
 
@@ -49,6 +107,70 @@ categories_all = {
 # data is already tokenized dumped string
 def tokenizer(string):
     return json.loads(string)
+
+
+def save_models(config: dict, locale: str, pipeline: Pipeline):
+    pca, tfidf, classifier = (
+        pipeline.named_steps["pca"].pca_,
+        pipeline.named_steps["tfidf"],
+        pipeline.named_steps["classifier"],
+    )  # type: PCA, TfidfVectorizer, LightGbmCpp
+    max_features = config["train"]["max_features"]
+    interim_path = (
+        Path(config["base"]["data_dir"])
+        / Path(config["train"]["interim_path"])
+        / locale
+    )
+    interim_path.mkdir(parents=True, exist_ok=True)
+    models_path = Path(config["train"]["models_path"]) / locale
+    models_path.mkdir(parents=True, exist_ok=True)
+    reports_path = Path(config["train"]["reports_path"]) / locale
+    reports_path.mkdir(parents=True, exist_ok=True)
+
+    logger.info("Save TF-IDF vocabulary")
+    with open(interim_path / "tfidf_vocab.txt", "w") as f:
+        for word in tfidf.get_feature_names():
+            f.write(str(binascii.crc32(word.encode("utf8"))) + "\n")
+
+    logger.info("Save TF-IDF strange file")
+    with open(interim_path / "tfidf_idf.txt", "w") as f:
+        for idf in tfidf.idf_:
+            f.write(str(idf) + "\n")
+
+    logger.info("Save TF-IDF vocabulary words")
+    with open(interim_path / "tfidf_vocab_words.txt", "w", encoding="utf-8") as f:
+        for word in pipeline.named_steps["tfidf"].get_feature_names():
+            f.write(word + "\n")
+    logger.info("Saving PCA model")
+    # ```python
+    # n_components
+    # n_features
+    # mean_[0]...mean_[n_features - 1]
+    # components_[0][0]...components_[0][n_features - 1]
+    # ....................................................
+    # components_[n_components - 1][0]...components_[n_components - 1][n_features - 1]
+    # ```
+    with open(models_path / "pca.pkl", "wb") as f:
+        joblib.dump(pca, f)
+
+    with open(interim_path / "pca.txt", "w") as f:
+        f.write("%d %d\n" % (pca.n_components, tfidf.max_features))
+        for m in pca.mean_:
+            f.write(str(m) + " ")
+        f.write("\n")
+        for i in pca.components_:
+            for j in i:
+                f.write(str(j) + " ")
+            f.write("\n")
+
+    logger.info("saving LightGBM model")
+    classifier.bst.save_model(
+        models_path / "model.txt", num_iteration=classifier.bst.best_iteration
+    )
+    logger.info("Saving train report for DVC")
+    with open(reports_path / "train_progress.json", "w") as f:
+        # NOTE: hardcoded name, retrieved it from debugger
+        json.dump(classifier.evals_result["valid_0"], f)
 
 
 def main(config: dict, locale: str):
@@ -111,124 +233,38 @@ def main(config: dict, locale: str):
         random_state=random_state,
     )
 
-    logger.info("Data vectorization using tfidf")
-
     max_features = config["train"]["max_features"]
-    tfidf = TfidfVectorizer(
-        tokenizer=tokenizer, lowercase=False, max_features=max_features
-    )
-
-    # We fit vectorizer only on training data
-
-    X_train = tfidf.fit_transform(X_train)
-    X_validate = tfidf.transform(X_validate)
-    X_test = tfidf.transform(X_test)
-
-    # TODO deterministic output
-    # logger.info("Save trained vectorizer")
-    # with open(models_path / "tfidf.pkl", "wb") as f:
-    #     joblib.dump(tfidf, f)
-
-    logger.info("Save TF-IDF vocabulary")
-    with open(interim_path / "tfidf_vocab.txt", "w") as f:
-        for word in tfidf.get_feature_names():
-            f.write(str(binascii.crc32(word.encode("utf8"))) + "\n")
-
-    logger.info("Save TF-IDF strange file")
-    with open(interim_path / "tfidf_idf.txt", "w") as f:
-        for idf in tfidf.idf_:
-            f.write(str(idf) + "\n")
-
-    logger.info("Save TF-IDF vocabulary words")
-    with open(interim_path / "tfidf_vocab_words.txt", "w", encoding="utf-8") as f:
-        for word in tfidf.get_feature_names():
-            f.write(word + "\n")
-
-    logger.info("Using PCA to compress data")
-
-    # % % time
-    pca = PCA(random_state=random_state)
-    pca.fit(X_train.toarray())
-
-    logger.info("Determining a sufficient number of components")
-
-    # TODO deterministic output
-    # plt.figure(figsize=(16, 9))
-    # plt.plot(np.cumsum(pca.explained_variance_ratio_))
-    # plt.xlabel("number of components")
-    # plt.ylabel("cumulative explained variance")
-    # plt.grid()
-    # plt.savefig(reports_path / "pca_fig.pdf")
-
-    logger.info("Lets leave some number of components")
-    # take minimal number of components required to achiev `pca_explained_variance_threshold`
-    pca_components = np.min(
-        np.argwhere(
-            np.cumsum(pca.explained_variance_ratio_) > pca_explained_variance_threshold
-        )
-    )
-    pca = PCA(n_components=pca_components, random_state=random_state)
-
-    X_train = pca.fit_transform(X_train.toarray())
-    X_test = pca.transform(X_test.toarray())
-    X_validate = pca.transform(X_validate.toarray())
-
-    logger.info("Saving PCA model")
-
-    # ```python
-    # n_components
-    # n_features
-    # mean_[0]...mean_[n_features - 1]
-    # components_[0][0]...components_[0][n_features - 1]
-    # ....................................................
-    # components_[n_components - 1][0]...components_[n_components - 1][n_features - 1]
-    # ```
-
-    with open(models_path / "pca.pkl", "wb") as f:
-        joblib.dump(pca, f)
-    ## load
-    with open(models_path / "pca.pkl", "rb") as f:
-        pca = joblib.load(f)
-
-    with open(interim_path / "pca.txt", "w") as f:
-        f.write("%d %d\n" % (pca_components, max_features))
-        for m in pca.mean_:
-            f.write(str(m) + " ")
-
-        f.write("\n")
-
-        for i in pca.components_:
-            for j in i:
-                f.write(str(j) + " ")
-            f.write("\n")
-
-    # Model
-    logger.info("Creating datasets objects for LightGBM")
-    train_data = lgb.Dataset(X_train, label=y_train, free_raw_data=False)
-    validate_data = lgb.Dataset(
-        X_validate, y_validate, reference=train_data, free_raw_data=False
-    )
-
-    ## Set model parameters
-
-    # To see all posible parameters visit https: // lightgbm.readthedocs.io / en / latest / Parameters.html
-
     params = config["train"]["lightgbm_parameters"]
     params["num_class"] = len(topics)
-
-    logger.info("Train and save model")
-    evals_result = {}
-    bst = lgb.train(
-        params, train_data, valid_sets=[validate_data], evals_result=evals_result
+    pipeline = Pipeline(
+        [
+            (
+                "tfidf",
+                TfidfVectorizer(
+                    tokenizer=tokenizer, lowercase=False, max_features=max_features
+                ),
+            ),
+            (
+                "pca",
+                PrecisionPCA(
+                    random_state=random_state,
+                    variance_threshold=pca_explained_variance_threshold,
+                ),
+            ),
+            (
+                "classifier",
+                LightGbmCpp(
+                    X_validate=X_validate, y_validate=y_validate, params=params
+                ),
+            ),
+        ]
     )
-    bst.save_model(models_path / "model.txt", num_iteration=bst.best_iteration)
-    bst = lgb.Booster(model_file=models_path / "model.txt")
 
-    logger.info("Saving train report for DVC")
-    with open(reports_path / "train_progress.json", "w") as f:
-        # NOTE: hardcoded name, retrieved it from debugger
-        json.dump(evals_result["valid_0"], f)
-    # Model quality
+    pipeline.fit(X_train, y_train)
+    pipeline.predict(X_train)
+    pipeline.predict(X_test)
+
+    return
     logger.info("Get predicted lables")
     y_pred_train = bst.predict(X_train)
     y_pred_test = bst.predict(X_test)
