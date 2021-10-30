@@ -8,6 +8,7 @@ import joblib
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
+import yaml
 from loguru import logger
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.decomposition import PCA
@@ -175,7 +176,7 @@ def save_report(
     y_pred_train: np.array,
     y_pred_test: np.array,
 ):
-    classifier = pipeline.named_steps["classifier"]
+    classifier = pipeline.named_steps["classifier"]  # type: LightGbmCpp
     reports_path = Path(config["train"]["reports_path"]) / locale
     reports_path.mkdir(parents=True, exist_ok=True)
     logger.info("Saving train report for DVC")
@@ -191,6 +192,9 @@ def save_report(
     pd.DataFrame(
         zip(y_pred_test.reshape(-1), y_test), columns=["actual", "predicted"]
     ).to_csv(reports_path / "confusion.csv", sep=",", index=False)
+    logger.info("saving best model params")
+    with open(reports_path / "best_params.yaml", "w") as f:
+        yaml.dump(classifier.params, f)
 
 
 def read_data(config: dict, locale: str):
@@ -237,6 +241,7 @@ def main(config: dict, locale: str):
     logger.info("reading data")
     all_data, y, topics = read_data(config, locale)
     classifier_grid["num_class"] = [len(topics)]
+    classifier_grid["random_state"] = [random_state]
     logger.info("train/test split")
     X_train, X_test, y_train, y_test = train_test_split(
         all_data,
