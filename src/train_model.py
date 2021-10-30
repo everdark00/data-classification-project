@@ -92,6 +92,7 @@ class LightGbmCpp(BaseEstimator, ClassifierMixin):
         self.random_state = params["random_state"]
         self.validate_size = params["validate_size"]
         self.params = params
+        return self
 
     def get_params(self, deep=True):
         return {
@@ -129,12 +130,9 @@ def tokenizer(string):
     return json.loads(string)
 
 
-def save_models(config: dict, locale: str, pipeline: Pipeline):
-    pca, tfidf, classifier = (
-        pipeline.named_steps["pca"].pca,
-        pipeline.named_steps["tfidf"],
-        pipeline.named_steps["classifier"],
-    )  # type: PCA, TfidfVectorizer, LightGbmCpp
+def save_models(
+    config: dict, locale: str, pca: PCA, tfidf: TfidfVectorizer, classifier
+):
     interim_path = (
         Path(config["base"]["data_dir"])
         / Path(config["train"]["interim_path"])
@@ -156,7 +154,7 @@ def save_models(config: dict, locale: str, pipeline: Pipeline):
 
     logger.info("Save TF-IDF vocabulary words")
     with open(interim_path / "tfidf_vocab_words.txt", "w", encoding="utf-8") as f:
-        for word in pipeline.named_steps["tfidf"].get_feature_names():
+        for word in tfidf.get_feature_names():
             f.write(word + "\n")
     logger.info("Saving PCA model")
     # ```python
@@ -189,13 +187,12 @@ def save_models(config: dict, locale: str, pipeline: Pipeline):
 def save_report(
     config: dict,
     locale: str,
-    pipeline: Pipeline,
+    classifier: LightGbmCpp,
     y_train: Sequence,
     y_test: Sequence,
     y_pred_train: np.array,
     y_pred_test: np.array,
 ):
-    classifier = pipeline.named_steps["classifier"]  # type: LightGbmCpp
     reports_path = Path(config["train"]["reports_path"]) / locale
     target_metric = classifier.params["metric"]
     reports_path.mkdir(parents=True, exist_ok=True)
@@ -272,7 +269,7 @@ def main(config: dict, locale: str):
         random_state=random_state,
     )
 
-    pipeline = Pipeline(
+    pipeline_data = Pipeline(
         [
             (
                 "tfidf",
@@ -286,29 +283,37 @@ def main(config: dict, locale: str):
                     random_state=random_state, variance_threshold=pca_threshold
                 ),
             ),
-            (
-                "classifier",
-                LightGbmCpp(),
-            ),
         ]
     )
 
-    logger.info("Fitting pipeline")
+    logger.info("Fitting preprocessing pipeline")
+    gbm_x_train = pipeline_data.fit_transform(X_train, y_train)
+    gbm_x_test = pipeline_data.transform(X_test)
+
+    logger.info("Preparing CV for classifier")
     classifier_grid["num_class"] = [len(topics)]
     classifier_grid["random_state"] = [random_state]
     classifier_grid["validate_size"] = [validate_size]
-    cv_grid = {f"classifier__{key}": value for key, value in classifier_grid.items()}
-    cv = GridSearchCV(estimator=pipeline, param_grid=cv_grid)
-    cv.fit(X_train, y_train)
-    logger.info("Get predicted lables")
-    y_pred_train = cv.predict(X_train)
-    y_pred_test = cv.predict(X_test)
+    # cv_grid = {f"classifier__{key}": value for key, value in classifier_grid.items()}
+    cv_grid = classifier_grid
+    logger.info("Starting CV for classifier")
+    cv = GridSearchCV(estimator=LightGbmCpp(), param_grid=cv_grid)
+    cv.fit(gbm_x_train, y_train)
+    logger.info("Predicting labels")
+    y_pred_train = cv.predict(gbm_x_train)
+    y_pred_test = cv.predict(gbm_x_test)
 
-    save_models(config, locale, cv.best_estimator_)
+    save_models(
+        config=config,
+        locale=locale,
+        pca=pipeline_data.named_steps["pca"].pca,
+        classifier=cv.best_estimator_,
+        tfidf=pipeline_data.named_steps["tfidf"],
+    )
     save_report(
         config=config,
         locale=locale,
-        pipeline=cv.best_estimator_,
+        classifier=cv.best_estimator_,
         y_train=y_train,
         y_test=y_test,
         y_pred_train=y_pred_train,
