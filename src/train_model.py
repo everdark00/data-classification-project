@@ -2,18 +2,17 @@ import binascii
 import json
 from argparse import ArgumentParser
 from pathlib import Path
+from typing import Sequence
 
 import joblib
 import lightgbm as lgb
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sn
 from loguru import logger
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import accuracy_score, confusion_matrix
+from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 
@@ -25,7 +24,7 @@ class PrecisionPCA(BaseEstimator, TransformerMixin):
         self.variance_threshold = variance_threshold
         self.random_state = random_state
         self._tmp_pca = PCA()
-        self._pca = PCA()
+        self.pca = PCA()
 
     def fit(self, X, y):
         self._tmp_pca = PCA(random_state=self.random_state)
@@ -43,36 +42,31 @@ class PrecisionPCA(BaseEstimator, TransformerMixin):
         logger.info(
             f"Leaving {pca_components} components by threshold={self.variance_threshold}"
         )
-        self._pca = PCA(n_components=pca_components, random_state=self.random_state)
-        self._pca.fit(X.toarray())
+        self.pca = PCA(n_components=pca_components, random_state=self.random_state)
+        self.pca.fit(X.toarray())
         return self
 
     def transform(self, X):
-        return self._pca.transform(X.toarray())
+        return self.pca.transform(X.toarray())
 
 
 class LightGbmCpp(BaseEstimator, ClassifierMixin):
-    def __init__(self, X_validate, y_validate, params: dict):
-        self.x_val = X_validate
-        self.y_val = y_validate
+    def __init__(self, params: dict):
         self.params = params
         self.evals_result = {}
-        self.bst = None
+        self.bst = None  # type: lgb.Booster
 
     def fit(self, X, y):
         train_data = lgb.Dataset(X, label=y, free_raw_data=False)
-        validate_data = lgb.Dataset(
-            self.x_val, self.y_val, reference=train_data, free_raw_data=False
-        )
         self.bst = lgb.train(
             self.params,
             train_data,
-            valid_sets=[validate_data],
+            valid_sets=[train_data],
             evals_result=self.evals_result,
         )
 
     def predict(self, X):
-        pass
+        return self.bst.predict(X)
 
 
 # %% md
@@ -111,11 +105,10 @@ def tokenizer(string):
 
 def save_models(config: dict, locale: str, pipeline: Pipeline):
     pca, tfidf, classifier = (
-        pipeline.named_steps["pca"].pca_,
+        pipeline.named_steps["pca"].pca,
         pipeline.named_steps["tfidf"],
         pipeline.named_steps["classifier"],
     )  # type: PCA, TfidfVectorizer, LightGbmCpp
-    max_features = config["train"]["max_features"]
     interim_path = (
         Path(config["base"]["data_dir"])
         / Path(config["train"]["interim_path"])
@@ -124,8 +117,6 @@ def save_models(config: dict, locale: str, pipeline: Pipeline):
     interim_path.mkdir(parents=True, exist_ok=True)
     models_path = Path(config["train"]["models_path"]) / locale
     models_path.mkdir(parents=True, exist_ok=True)
-    reports_path = Path(config["train"]["reports_path"]) / locale
-    reports_path.mkdir(parents=True, exist_ok=True)
 
     logger.info("Save TF-IDF vocabulary")
     with open(interim_path / "tfidf_vocab.txt", "w") as f:
@@ -167,10 +158,33 @@ def save_models(config: dict, locale: str, pipeline: Pipeline):
     classifier.bst.save_model(
         models_path / "model.txt", num_iteration=classifier.bst.best_iteration
     )
+
+
+def save_report(
+    config: dict,
+    locale: str,
+    pipeline: Pipeline,
+    y_train: Sequence,
+    y_test: Sequence,
+    y_pred_train: np.array,
+    y_pred_test: np.array,
+):
+    classifier = pipeline.named_steps["classifier"]
+    reports_path = Path(config["train"]["reports_path"]) / locale
+    reports_path.mkdir(parents=True, exist_ok=True)
     logger.info("Saving train report for DVC")
     with open(reports_path / "train_progress.json", "w") as f:
         # NOTE: hardcoded name, retrieved it from debugger
-        json.dump(classifier.evals_result["valid_0"], f)
+        json.dump(classifier.evals_result["training"], f)
+    logger.info("Accuracy score")
+    score_train = accuracy_score(y_pred_train, y_train)
+    score_test = accuracy_score(y_pred_test, y_test)
+    with open(reports_path / "metrics.json", "w") as f:
+        json.dump({"accuracy_train": score_train, "accuracy_test": score_test}, f)
+    logger.info("Confusion matrix for DVC")
+    pd.DataFrame(
+        zip(y_pred_test.reshape(-1), y_test), columns=["actual", "predicted"]
+    ).to_csv(reports_path / "confusion.csv", sep=",", index=False)
 
 
 def main(config: dict, locale: str):
@@ -178,14 +192,6 @@ def main(config: dict, locale: str):
     data_path = (
         Path(config["base"]["data_dir"]) / Path(config["train"]["input_path"]) / locale
     )
-    interim_path = (
-        Path(config["base"]["data_dir"])
-        / Path(config["train"]["interim_path"])
-        / locale
-    )
-    interim_path.mkdir(parents=True, exist_ok=True)
-    models_path = Path(config["train"]["models_path"]) / locale
-    models_path.mkdir(parents=True, exist_ok=True)
     reports_path = Path(config["train"]["reports_path"]) / locale
     reports_path.mkdir(parents=True, exist_ok=True)
 
@@ -253,36 +259,29 @@ def main(config: dict, locale: str):
             ),
             (
                 "classifier",
-                LightGbmCpp(
-                    X_validate=X_validate, y_validate=y_validate, params=params
-                ),
+                LightGbmCpp(params=params),
             ),
         ]
     )
 
+    logger.info("Fitting pipeline")
     pipeline.fit(X_train, y_train)
-    pipeline.predict(X_train)
-    pipeline.predict(X_test)
-
-    return
     logger.info("Get predicted lables")
-    y_pred_train = bst.predict(X_train)
-    y_pred_test = bst.predict(X_test)
-    logger.info("Calculate different metrics")
+    y_pred_train = pipeline.predict(X_train)
+    y_pred_test = pipeline.predict(X_test)
     y_pred_train = np.argmax(y_pred_train, axis=1)
     y_pred_test = np.argmax(y_pred_test, axis=1)
 
-    logger.info("Accuracy score")
-
-    score_train = accuracy_score(y_pred_train, y_train)
-    score_test = accuracy_score(y_pred_test, y_test)
-    with open(reports_path / "metrics.json", "w") as f:
-        json.dump({"accuracy_train": score_train, "accuracy_test": score_test}, f)
-
-    logger.info("Save for DVC")
-    pd.DataFrame(
-        zip(y_pred_test.reshape(-1), y_test), columns=["actual", "predicted"]
-    ).to_csv(reports_path / "confusion.csv", sep=",", index=False)
+    save_models(config, locale, pipeline)
+    save_report(
+        config=config,
+        locale=locale,
+        pipeline=pipeline,
+        y_train=y_train,
+        y_test=y_test,
+        y_pred_train=y_pred_train,
+        y_pred_test=y_pred_test,
+    )
 
 
 if __name__ == "__main__":
