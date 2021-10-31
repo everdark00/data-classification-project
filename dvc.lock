@@ -182,10 +182,26 @@ stages:
       md5: 369f9c4f31aa5e866b26ac0bd2784a77
       size: 1566
     outs:
-    - path: data_test/raw
-      md5: 0d1fc3d6da7c98b8e497af4904d7db19.dir
-      size: 396485760
-      nfiles: 1201
+    - path: data_test/raw/de
+      md5: ed415476b6bb791945121541cd03e0b3.dir
+      size: 94126353
+      nfiles: 205
+    - path: data_test/raw/es
+      md5: 2d32648e66465168018d6468213188a4.dir
+      size: 65410390
+      nfiles: 229
+    - path: data_test/raw/fr
+      md5: f3c0a7447a4386da507e1dd0c6c15cef.dir
+      size: 67877226
+      nfiles: 218
+    - path: data_test/raw/it
+      md5: f85370ff9b8819c5c89f06b516ae76b6.dir
+      size: 44140397
+      nfiles: 196
+    - path: data_test/raw/ja
+      md5: db3ff1922bb87bafe50a3d7805aebfa4.dir
+      size: 158055068
+      nfiles: 353
   tika_fr:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=fr
