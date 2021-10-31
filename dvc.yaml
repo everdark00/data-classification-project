@@ -249,59 +249,59 @@ stages:
         x: iteration
         cache: false
 
-  tika_jpn:
+  tika_ja:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
-      --locale=jpn
+      --locale=ja
     deps:
-    - ${base.data_dir}/${tika.input_path}/jpn
+    - ${base.data_dir}/${tika.input_path}/ja
     - src/tika_parser.py
     outs:
-    - ${base.data_dir}/${tika.output_path}/jpn
+    - ${base.data_dir}/${tika.output_path}/ja
     params:
     - tika
     - base
 
-  tokenizer_jpn:
+  tokenizer_ja:
     cmd: export PYTHONPATH=$PWD && python -m spacy download ja_core_news_sm && python
-      src/tokenizer.py --config=params.yaml --locale=jpn
+      src/tokenizer.py --config=params.yaml --locale=ja
     deps:
-    - ${base.data_dir}/${tokenizer.input_path}/jpn
+    - ${base.data_dir}/${tokenizer.input_path}/ja
     - src/tokenizer.py
     outs:
-    - ${base.data_dir}/${tokenizer.output_path}/jpn
+    - ${base.data_dir}/${tokenizer.output_path}/ja
     params:
     - tokenizer
     - base
 
-  train_jpn:
+  train_ja:
     cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
-      --locale=jpn
+      --locale=ja
     deps:
-    - ${base.data_dir}/${train.input_path}/jpn
+    - ${base.data_dir}/${train.input_path}/ja
     - src/train_model.py
     outs:
-    - ${base.data_dir}/${train.interim_path}/jpn/tfidf_vocab.txt
-    - ${base.data_dir}/${train.interim_path}/jpn/tfidf_idf.txt
-    - ${base.data_dir}/${train.interim_path}/jpn/tfidf_vocab_words.txt
-    - ${train.models_path}/jpn/pca.pkl
-    - ${base.data_dir}/${train.interim_path}/jpn/pca.txt
-    - ${train.models_path}/jpn/model.txt
-    - ${train.reports_path}/jpn/best_params.yaml
+    - ${base.data_dir}/${train.interim_path}/ja/tfidf_vocab.txt
+    - ${base.data_dir}/${train.interim_path}/ja/tfidf_idf.txt
+    - ${base.data_dir}/${train.interim_path}/ja/tfidf_vocab_words.txt
+    - ${train.models_path}/ja/pca.pkl
+    - ${base.data_dir}/${train.interim_path}/ja/pca.txt
+    - ${train.models_path}/ja/model.txt
+    - ${train.reports_path}/ja/best_params.yaml
     params:
     - base
     - tokenizer.industries
     - train
     metrics:
-    - ${train.reports_path}/jpn/metrics.json:
+    - ${train.reports_path}/ja/metrics.json:
         cache: false
     plots:
-    - ${train.reports_path}/jpn/confusion.csv:
+    - ${train.reports_path}/ja/confusion.csv:
         title: confusion matrix
         template: confusion
         x: actual
         y: predicted
         cache: false
-    - ${train.reports_path}/jpn/train_progress.csv:
+    - ${train.reports_path}/ja/train_progress.csv:
         title: train progress
         template: default
         y: ${train.lightgbm_parameters.metric[0]}
