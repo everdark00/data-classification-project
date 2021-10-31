@@ -724,3 +724,177 @@ stages:
     - path: reports//it/train_progress.csv
       md5: 629e61410c761967dbaef8755620c9b9
       size: 5436
+  tika_ja:
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=ja
+    deps:
+    - path: data_test/raw//ja
+      md5: fc6304eea4403edd31a64ef0814f3858.dir
+      size: 91818770
+      nfiles: 352
+    - path: src/tika_parser.py
+      md5: 1de949225b2f26c35330fb0962d52592
+      size: 2183
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data_test
+        tika:
+          input_path: raw/
+          output_path: interim/tika/
+    outs:
+    - path: data_test/interim/tika//ja
+      md5: 5590a4c3f3b44885573a76e858d6dd0b.dir
+      size: 5499183
+      nfiles: 352
+  tokenizer_ja:
+    cmd: export PYTHONPATH=$PWD && python -m spacy download ja_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=ja
+    deps:
+    - path: data_test/interim/tika/ja
+      md5: 5590a4c3f3b44885573a76e858d6dd0b.dir
+      size: 5499183
+      nfiles: 352
+    - path: src/tokenizer.py
+      md5: ed59716e9e5f090388f101912c19f224
+      size: 3963
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data_test
+        tokenizer:
+          min_tokens: 500
+          max_symbols: 250000
+          input_path: interim/tika
+          output_path: interim/tokenizer
+          industries:
+          - finance_banking
+          - it_research_development
+          - manufacturing
+          - medical_medicine_paramedical
+          - sales_marketing_pr
+          - businises_corporate
+          - hr
+          - legal
+          - others
+    outs:
+    - path: data_test/interim/tokenizer/ja
+      md5: efd37cf2c0c23878f30f8231d1bee61f.dir
+      size: 3475930
+      nfiles: 9
+  train_ja:
+    cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
+      --locale=ja
+    deps:
+    - path: data_test/interim/tokenizer/ja
+      md5: efd37cf2c0c23878f30f8231d1bee61f.dir
+      size: 3475930
+      nfiles: 9
+    - path: src/train_model.py
+      md5: 0e8318348837b5bc77b9cf625f98fdd1
+      size: 11332
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data_test
+        tokenizer.industries:
+        - finance_banking
+        - it_research_development
+        - manufacturing
+        - medical_medicine_paramedical
+        - sales_marketing_pr
+        - businises_corporate
+        - hr
+        - legal
+        - others
+        train:
+          input_path: interim/tokenizer
+          interim_path: interim/train
+          test_size: 0.25
+          validate_size: 0.2
+          max_features: 1024
+          reports_path: reports/
+          models_path: models/
+          pca_explained_variance_threshold: 0.9
+          lightgbm_parameters:
+            learning_rate:
+            - 0.15
+            boosting:
+            - gbdt
+            max_depth:
+            - 2
+            - 4
+            num_leaves:
+            - 20
+            - 31
+            - 40
+            objective:
+            - multiclass
+            num_iterations:
+            - 240
+            subsample:
+            - 0.5
+            subsample_freq:
+            - 1
+            is_unbalance:
+            - true
+            reg_lambda:
+            - 0.01
+            early_stopping_round:
+            - 3
+            metric:
+            - multi_logloss
+            verbosity:
+            - -1
+    outs:
+    - path: data_test/interim/train/ja/pca.txt
+      md5: ef26f6d31bbdaf0af28f1a159cf1db6f
+      size: 835030
+    - path: data_test/interim/train/ja/tfidf_idf.txt
+      md5: 2ad01b1d88df952383c491366bb38858
+      size: 18768
+    - path: data_test/interim/train/ja/tfidf_vocab.txt
+      md5: 2c47ef2b4fc45fdc2a250245a2c5f0e4
+      size: 11002
+    - path: data_test/interim/train/ja/tfidf_vocab_words.txt
+      md5: e19b82f8852f19a72586cd6442cb9e73
+      size: 6931
+    - path: models//ja/model.txt
+      md5: 7b9179cbc3df935f641ffe57db238ef4
+      size: 6161
+    - path: models//ja/pca.pkl
+      md5: f37dcd12049c891d6281bbfe1adda3b2
+      size: 313029
+    - path: reports//ja/best_params.yaml
+      md5: f1512bf03a0e6acff071682123898ffd
+      size: 247
+    - path: reports//ja/confusion.csv
+      md5: ee282aad2b5f4205c6da6849db7c945c
+      size: 93
+    - path: reports//ja/metrics.json
+      md5: c9629003095b5d4d4a43f2662e0ff193
+      size: 77
+    - path: reports//ja/train_progress.csv
+      md5: 1d267d31d9ed06f062193ddcc507cca8
+      size: 5436
