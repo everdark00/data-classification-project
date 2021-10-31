@@ -1,10 +1,10 @@
 [general]
-database = "/crawler/jpn-crawler/jpn.db"         # Location of SQLite database
+database = "/crawler/ja-crawler/ja.db"         # Location of SQLite database
 log_path = "/crawler/logs/"
 
 [common]
 use = true                   # Use this crawler or not
-path = "/crawler/data/raw/jpn/common"         # Where collected data will be saved
+path = "/crawler/data/raw/ja/common"         # Where collected data will be saved
 debug = true                # Show debug output
 extensions = [".html", ".htm",  ".pdf", ".doc", ".docx", ".odt", ".xls", ".xlsx", ".ods", ".ppt", ".pptx",  ".txt"]        # Which files to save. If empty - save all files
 max_amount = 5000            # Limit amount of downloaded files
@@ -16,7 +16,7 @@ workers = 8                 # Number of goroutines (threads) for this crawling m
 
 [google]
 use = true
-path = "/crawler/data/raw/jpn/google"
+path = "/crawler/data/raw/ja/google"
 debug = true
 extension = "pdf"       # Which files to search
 search_interval = 30    # In seconds
@@ -26,7 +26,7 @@ random_seed = 42
 
 [colly]
 use = true
-path = "/crawler/data/raw/jpn/colly"
+path = "/crawler/data/raw/ja/colly"
 debug = true
 extensions = [".html", ".htm",  ".pdf", ".doc", ".docx", ".odt", ".xls", ".xlsx", ".ods", ".ppt", ".pptx",  ".txt"]
 max_amount = 5000
