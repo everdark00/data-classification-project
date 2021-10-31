@@ -199,9 +199,9 @@ stages:
       size: 44140397
       nfiles: 196
     - path: data_test/raw/ja
-      md5: db3ff1922bb87bafe50a3d7805aebfa4.dir
-      size: 158055068
-      nfiles: 353
+      md5: fc6304eea4403edd31a64ef0814f3858.dir
+      size: 91818770
+      nfiles: 352
   tika_fr:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=fr
