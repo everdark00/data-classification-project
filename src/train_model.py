@@ -127,7 +127,7 @@ categories_all = {
 # we are using custom tokenizer because
 # data is already tokenized dumped string
 def tokenizer(string):
-    return json.loads(string)
+    return string.split()
 
 
 def save_models(
