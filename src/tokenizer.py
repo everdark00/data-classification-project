@@ -75,10 +75,7 @@ def process(
                                 else:
                                     if len(tokens) >= min_tokens:
                                         result_file.write(
-                                            (
-                                                json.dumps(tokens, ensure_ascii=False)
-                                                + "\n"
-                                            )
+                                            "{}\n".format(" ".join(tokens))
                                         )
 
 
