@@ -3,4 +3,4 @@
 [core]
     remote = gcloud
 ['remote "gcloud"']
-    url = gs://data-classification-documents/prod
+    url = gs://data-classification-documents/dev

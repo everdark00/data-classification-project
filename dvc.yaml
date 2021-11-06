@@ -1,4 +1,16 @@
 stages:
+  make_small_dataset:
+    cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml
+      --test_dir=data_test
+    deps:
+    - src/make_test_dataset.py
+    outs:
+    - data_test/raw/de
+    - data_test/raw/fr
+    - data_test/raw/es
+    - data_test/raw/it
+    - data_test/raw/ja
+    frozen: true
   tika_de:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=de

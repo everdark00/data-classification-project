@@ -3,7 +3,7 @@ base:
   random_seed: 42
   log_path: logs
   crawlers: [colly, google, common]
-  data_dir: data
+  data_dir: data_test
 
 tika:
   # relative to `base.data_dir`
