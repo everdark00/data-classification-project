@@ -39,8 +39,8 @@ stages:
       size: 6489907
       nfiles: 205
     - path: src/tokenizer.py
-      md5: ed59716e9e5f090388f101912c19f224
-      size: 3963
+      md5: 092c180748eeabeb886b86d2a3e3d542
+      size: 3805
     params:
       params.yaml:
         base:
@@ -69,20 +69,20 @@ stages:
           - others
     outs:
     - path: data_test/interim/tokenizer/de
-      md5: b7e24a5bcf503d8035c725854f7ea588.dir
-      size: 3094747
+      md5: 6810e31b4c5a69b824ef4072f767254e.dir
+      size: 2222599
       nfiles: 9
   train_de:
     cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
       --locale=de
     deps:
     - path: data_test/interim/tokenizer/de
-      md5: b7e24a5bcf503d8035c725854f7ea588.dir
-      size: 3094747
+      md5: 6810e31b4c5a69b824ef4072f767254e.dir
+      size: 2222599
       nfiles: 9
     - path: src/train_model.py
-      md5: 0e8318348837b5bc77b9cf625f98fdd1
-      size: 11332
+      md5: f92c21cc61c7bbd4222076a1f85da401
+      size: 11328
     params:
       params.yaml:
         base:
@@ -241,8 +241,8 @@ stages:
       size: 5235713
       nfiles: 218
     - path: src/tokenizer.py
-      md5: ed59716e9e5f090388f101912c19f224
-      size: 3963
+      md5: 092c180748eeabeb886b86d2a3e3d542
+      size: 3805
     params:
       params.yaml:
         base:
@@ -271,20 +271,20 @@ stages:
           - others
     outs:
     - path: data_test/interim/tokenizer/fr
-      md5: 95b7306631be7256163029232ce75554.dir
-      size: 2233065
+      md5: 35dbee3a657d27785508de62bcaef830.dir
+      size: 1514542
       nfiles: 9
   train_fr:
     cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
       --locale=fr
     deps:
     - path: data_test/interim/tokenizer/fr
-      md5: 95b7306631be7256163029232ce75554.dir
-      size: 2233065
+      md5: 35dbee3a657d27785508de62bcaef830.dir
+      size: 1514542
       nfiles: 9
     - path: src/train_model.py
-      md5: 0e8318348837b5bc77b9cf625f98fdd1
-      size: 11332
+      md5: f92c21cc61c7bbd4222076a1f85da401
+      size: 11328
     params:
       params.yaml:
         base:
@@ -347,22 +347,22 @@ stages:
             - -1
     outs:
     - path: data_test/interim/train/fr/pca.txt
-      md5: 549cae9cfca334d1a2212f587e31b79b
-      size: 795007
+      md5: 113facfcf19965ec0b32016569819379
+      size: 794867
     - path: data_test/interim/train/fr/tfidf_idf.txt
-      md5: 5ea7862f520fb3b9326f81bffa4a17d9
-      size: 18847
+      md5: 1d73042b38f5b13685b1489c818c59c3
+      size: 18848
     - path: data_test/interim/train/fr/tfidf_vocab.txt
-      md5: 3fd5f0ca73b6b41e0f628a6382954984
+      md5: 8b3ac1a0db8ae97a65f07d2313f60d95
       size: 11000
     - path: data_test/interim/train/fr/tfidf_vocab_words.txt
-      md5: b2123cee4c49cd5be23969b23d0be226
-      size: 7846
+      md5: 195c47d36b9195f4510c8a55fb601fda
+      size: 7849
     - path: models//fr/model.txt
-      md5: d2bcbf2ff0b7b9f299a56e2571f80be0
-      size: 6051
+      md5: 2f4c7630a1368ebd4af8c548845b105d
+      size: 6061
     - path: models//fr/pca.pkl
-      md5: e48da4d40d196a35fa74fc7220beedb0
+      md5: 1f4b1a47ba486b63578f96d80d06dd34
       size: 296597
     - path: reports//fr/best_params.yaml
       md5: f1512bf03a0e6acff071682123898ffd
@@ -415,8 +415,8 @@ stages:
       size: 11037938
       nfiles: 229
     - path: src/tokenizer.py
-      md5: ed59716e9e5f090388f101912c19f224
-      size: 3963
+      md5: 092c180748eeabeb886b86d2a3e3d542
+      size: 3805
     params:
       params.yaml:
         base:
@@ -445,20 +445,20 @@ stages:
           - others
     outs:
     - path: data_test/interim/tokenizer/es
-      md5: 253896415e3fc9375495af1b0fe939b1.dir
-      size: 2276548
+      md5: 4d6ff4eaea8667764ec18fbd19c3b68c.dir
+      size: 1557361
       nfiles: 9
   train_es:
     cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
       --locale=es
     deps:
     - path: data_test/interim/tokenizer/es
-      md5: 253896415e3fc9375495af1b0fe939b1.dir
-      size: 2276548
+      md5: 4d6ff4eaea8667764ec18fbd19c3b68c.dir
+      size: 1557361
       nfiles: 9
     - path: src/train_model.py
-      md5: 0e8318348837b5bc77b9cf625f98fdd1
-      size: 11332
+      md5: f92c21cc61c7bbd4222076a1f85da401
+      size: 11328
     params:
       params.yaml:
         base:
@@ -521,22 +521,22 @@ stages:
             - -1
     outs:
     - path: data_test/interim/train/es/pca.txt
-      md5: 622feabfc30048909dd705ccb28ca2f8
-      size: 859969
+      md5: 78a272ab36cd9445cc1dddbc71c4d6da
+      size: 860076
     - path: data_test/interim/train/es/tfidf_idf.txt
-      md5: a5d4627aa6c7e6022e0a43c563c7702c
-      size: 18754
+      md5: 0e53f2164b04cd11c3f9c4fc81b61fa0
+      size: 18748
     - path: data_test/interim/train/es/tfidf_vocab.txt
-      md5: ceeb7b803502e3d9ec5954ceff089695
-      size: 11000
+      md5: 5399ae448d52d9c1bd8fdf776c7e0015
+      size: 11002
     - path: data_test/interim/train/es/tfidf_vocab_words.txt
-      md5: 517536e29887e9e53b5009aef2b5eca0
-      size: 7982
+      md5: 6d1a8cf653c815b0aef6ebc9478e31e5
+      size: 8005
     - path: models//es/model.txt
-      md5: 154ddf195198c2ae09827acd6adb722e
-      size: 6215
+      md5: 5f2d7ab14804fa9d788111e552950571
+      size: 6207
     - path: models//es/pca.pkl
-      md5: 2a64b59dd8366de020f748379f264c06
+      md5: 3b5dd9ab1fd22234fb310b47fe30567b
       size: 321245
     - path: reports//es/best_params.yaml
       md5: f1512bf03a0e6acff071682123898ffd
@@ -589,8 +589,8 @@ stages:
       size: 4857340
       nfiles: 196
     - path: src/tokenizer.py
-      md5: ed59716e9e5f090388f101912c19f224
-      size: 3963
+      md5: 092c180748eeabeb886b86d2a3e3d542
+      size: 3805
     params:
       params.yaml:
         base:
@@ -619,20 +619,20 @@ stages:
           - others
     outs:
     - path: data_test/interim/tokenizer/it
-      md5: 1e17d91f2447c1500c01df093f001a8d.dir
-      size: 1956100
+      md5: bd90a5215a9aa03a05f41211b968723a.dir
+      size: 1339604
       nfiles: 9
   train_it:
     cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
       --locale=it
     deps:
     - path: data_test/interim/tokenizer/it
-      md5: 1e17d91f2447c1500c01df093f001a8d.dir
-      size: 1956100
+      md5: bd90a5215a9aa03a05f41211b968723a.dir
+      size: 1339604
       nfiles: 9
     - path: src/train_model.py
-      md5: 0e8318348837b5bc77b9cf625f98fdd1
-      size: 11332
+      md5: f92c21cc61c7bbd4222076a1f85da401
+      size: 11328
     params:
       params.yaml:
         base:
@@ -763,8 +763,8 @@ stages:
       size: 5499183
       nfiles: 352
     - path: src/tokenizer.py
-      md5: ed59716e9e5f090388f101912c19f224
-      size: 3963
+      md5: 092c180748eeabeb886b86d2a3e3d542
+      size: 3805
     params:
       params.yaml:
         base:
@@ -793,20 +793,20 @@ stages:
           - others
     outs:
     - path: data_test/interim/tokenizer/ja
-      md5: efd37cf2c0c23878f30f8231d1bee61f.dir
-      size: 3475930
+      md5: 71d1f87a7f4d6052c6fe3921883b277a.dir
+      size: 2328530
       nfiles: 9
   train_ja:
     cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
       --locale=ja
     deps:
     - path: data_test/interim/tokenizer/ja
-      md5: efd37cf2c0c23878f30f8231d1bee61f.dir
-      size: 3475930
+      md5: 71d1f87a7f4d6052c6fe3921883b277a.dir
+      size: 2328530
       nfiles: 9
     - path: src/train_model.py
-      md5: 0e8318348837b5bc77b9cf625f98fdd1
-      size: 11332
+      md5: f92c21cc61c7bbd4222076a1f85da401
+      size: 11328
     params:
       params.yaml:
         base:
@@ -869,22 +869,22 @@ stages:
             - -1
     outs:
     - path: data_test/interim/train/ja/pca.txt
-      md5: ef26f6d31bbdaf0af28f1a159cf1db6f
-      size: 835030
+      md5: 0e01ae6ca177b4ec89790a25cecea7a0
+      size: 835224
     - path: data_test/interim/train/ja/tfidf_idf.txt
-      md5: 2ad01b1d88df952383c491366bb38858
-      size: 18768
+      md5: f6c1dc84c6c3c30f15d52e5be7c619c2
+      size: 18769
     - path: data_test/interim/train/ja/tfidf_vocab.txt
-      md5: 2c47ef2b4fc45fdc2a250245a2c5f0e4
+      md5: b149847a269bf75fccc98dbb22211c31
       size: 11002
     - path: data_test/interim/train/ja/tfidf_vocab_words.txt
-      md5: e19b82f8852f19a72586cd6442cb9e73
-      size: 6931
+      md5: a749e613a7abe564dbb983fe7b103cca
+      size: 6930
     - path: models//ja/model.txt
-      md5: 7b9179cbc3df935f641ffe57db238ef4
-      size: 6161
+      md5: 2a7a4462f598763e29fd1a23338dbe53
+      size: 6167
     - path: models//ja/pca.pkl
-      md5: f37dcd12049c891d6281bbfe1adda3b2
+      md5: 56d6e7c71918c59cde41c38bb191d778
       size: 313029
     - path: reports//ja/best_params.yaml
       md5: f1512bf03a0e6acff071682123898ffd
