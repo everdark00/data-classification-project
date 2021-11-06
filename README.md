@@ -4,6 +4,8 @@ Full repo for data classification project
 Repo contains **both** source code and data.
 Data is kept on Google Cloud and managed by [DVC](https://dvc.org).
 
+[[_TOC_]]
+
 ## Source code structure
 ```
 data/           <- data
