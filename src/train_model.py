@@ -13,7 +13,7 @@ from loguru import logger
 from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
 from sklearn.decomposition import PCA
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report, precision_recall_curve
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.pipeline import Pipeline
 
@@ -192,6 +192,7 @@ def save_report(
     y_test: Sequence,
     y_pred_train: np.array,
     y_pred_test: np.array,
+    target_names: Sequence[str],
 ):
     reports_path = Path(config["train"]["reports_path"]) / locale
     target_metric = classifier.params["metric"]
@@ -205,10 +206,24 @@ def save_report(
         reports_path / "train_progress.csv", index_label="iteration"
     )
     logger.info("Accuracy score")
-    score_train = accuracy_score(y_pred_train, y_train)
-    score_test = accuracy_score(y_pred_test, y_test)
     with open(reports_path / "metrics.json", "w") as f:
-        json.dump({"accuracy_train": score_train, "accuracy_test": score_test}, f)
+        report_json = {
+            "train": classification_report(
+                y_true=y_train,
+                y_pred=y_pred_train,
+                target_names=target_names,
+                labels=np.unique(y_pred_train),
+                output_dict=True,
+            ),
+            "test": classification_report(
+                y_true=y_test,
+                y_pred=y_pred_test,
+                target_names=target_names,
+                labels=np.unique(y_pred_test),
+                output_dict=True,
+            ),
+        }
+        json.dump(report_json, f)
     logger.info("Confusion matrix for DVC")
     pd.DataFrame(
         zip(y_pred_test.reshape(-1), y_test), columns=["actual", "predicted"]
@@ -318,6 +333,7 @@ def main(config: dict, locale: str):
         y_test=y_test,
         y_pred_train=y_pred_train,
         y_pred_test=y_pred_test,
+        target_names=topics,
     )
 
 
