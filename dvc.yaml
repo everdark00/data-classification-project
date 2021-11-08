@@ -60,8 +60,8 @@ stages:
     - ${train.reports_path}/de/confusion.csv:
         title: confusion matrix
         template: confusion
-        x: actual
-        y: predicted
+        y: actual
+        x: predicted
         cache: false
     - ${train.reports_path}/de/train_progress.csv:
         title: train progress
@@ -121,8 +121,8 @@ stages:
     - ${train.reports_path}/fr/confusion.csv:
         title: confusion matrix
         template: confusion
-        x: actual
-        y: predicted
+        y: actual
+        x: predicted
         cache: false
     - ${train.reports_path}/fr/train_progress.csv:
         title: train progress
@@ -182,8 +182,8 @@ stages:
     - ${train.reports_path}/es/confusion.csv:
         title: confusion matrix
         template: confusion
-        x: actual
-        y: predicted
+        y: actual
+        x: predicted
         cache: false
     - ${train.reports_path}/es/train_progress.csv:
         title: train progress
@@ -243,8 +243,8 @@ stages:
     - ${train.reports_path}/it/confusion.csv:
         title: confusion matrix
         template: confusion
-        x: actual
-        y: predicted
+        y: actual
+        x: predicted
         cache: false
     - ${train.reports_path}/it/train_progress.csv:
         title: train progress
@@ -302,8 +302,8 @@ stages:
     - ${train.reports_path}/ja/confusion.csv:
         title: confusion matrix
         template: confusion
-        x: actual
-        y: predicted
+        y: actual
+        x: predicted
         cache: false
     - ${train.reports_path}/ja/train_progress.csv:
         title: train progress
