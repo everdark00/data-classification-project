@@ -81,8 +81,8 @@ stages:
       size: 2222599
       nfiles: 9
     - path: src/train_model.py
-      md5: 0ee6d4f06fcc3680c392c65f32262a02
-      size: 11799
+      md5: 84d9288b4c277780a33fb3022dcbab17
+      size: 11856
     params:
       params.yaml:
         base:
@@ -145,35 +145,35 @@ stages:
             - -1
     outs:
     - path: data_test/interim/train/de/pca.txt
-      md5: 0dd602860653cb43ae772e335fcf0148
-      size: 817352
+      md5: a51f576a126461ad24bad3348f3fe7fa
+      size: 1057719
     - path: data_test/interim/train/de/tfidf_idf.txt
-      md5: 682849fc592391e7f87073304c3a4d67
-      size: 18732
+      md5: 5350b05caca2d4000daa97e28887db3f
+      size: 18852
     - path: data_test/interim/train/de/tfidf_vocab.txt
-      md5: d882560625e8755a0f1ff3ee2890fadc
-      size: 10988
+      md5: 949f341eb0c4745a5edcb1c4251256c3
+      size: 10994
     - path: data_test/interim/train/de/tfidf_vocab_words.txt
-      md5: 42ae5eb18d4c10d5a3596a1ab0992c2f
-      size: 8022
+      md5: 1c892492c9b981a9ddb247c952a16a4b
+      size: 7927
     - path: models//de/model.txt
-      md5: 0fcca7af97829658e0f2ac493eed2f77
-      size: 6105
+      md5: 5d7b0475386036747a5c6df4687558f3
+      size: 7174
     - path: models//de/pca.pkl
-      md5: 6c559e71971249a1b3f35a995eb6a6ac
-      size: 304813
+      md5: 10e54b5e564ec79caa355c899d48ea57
+      size: 395189
     - path: reports//de/best_params.yaml
-      md5: f1512bf03a0e6acff071682123898ffd
+      md5: 07eec8264c6e94c9f50ff4ee391fbcf3
       size: 247
     - path: reports//de/confusion.csv
-      md5: 85af2e2614e533ddf36406ff31aac1d1
-      size: 93
+      md5: b347a2c27102708d02e32322da60824c
+      size: 113
     - path: reports//de/metrics.json
-      md5: e1bd0339ec22d970ccb9ba68838aa6ff
+      md5: ed7ccc88ce53231582e68a193b7313bf
       size: 927
     - path: reports//de/train_progress.csv
-      md5: 2d9b9fa21b1a0703b1300184d2c65a60
-      size: 5436
+      md5: 3553ade75781ebc67a2393df1d10789a
+      size: 5196
   make_small_dataset:
     cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml
       --test_dir=data_test
@@ -283,8 +283,8 @@ stages:
       size: 1514542
       nfiles: 9
     - path: src/train_model.py
-      md5: 0ee6d4f06fcc3680c392c65f32262a02
-      size: 11799
+      md5: 84d9288b4c277780a33fb3022dcbab17
+      size: 11856
     params:
       params.yaml:
         base:
@@ -347,34 +347,34 @@ stages:
             - -1
     outs:
     - path: data_test/interim/train/fr/pca.txt
-      md5: 113facfcf19965ec0b32016569819379
-      size: 794867
+      md5: 6c762dcc7f08ee7ede5a7c695ee02dbb
+      size: 991140
     - path: data_test/interim/train/fr/tfidf_idf.txt
-      md5: 1d73042b38f5b13685b1489c818c59c3
-      size: 18848
+      md5: c784594e40b7495a7bd7b849c77611d9
+      size: 18835
     - path: data_test/interim/train/fr/tfidf_vocab.txt
-      md5: 8b3ac1a0db8ae97a65f07d2313f60d95
-      size: 11000
+      md5: 8fdde8eca87cda6caca4ca7ae70c2cab
+      size: 10991
     - path: data_test/interim/train/fr/tfidf_vocab_words.txt
-      md5: 195c47d36b9195f4510c8a55fb601fda
-      size: 7849
+      md5: 8bb423f36476fc39bf1fb2beacbdc623
+      size: 7769
     - path: models//fr/model.txt
-      md5: 2f4c7630a1368ebd4af8c548845b105d
-      size: 6061
+      md5: 0aa22d7de9d77cb4ef7691016b707df4
+      size: 7014
     - path: models//fr/pca.pkl
-      md5: 1f4b1a47ba486b63578f96d80d06dd34
-      size: 296597
+      md5: 889a471d5916034fb9f039c15d82e496
+      size: 370541
     - path: reports//fr/best_params.yaml
-      md5: f1512bf03a0e6acff071682123898ffd
+      md5: 07eec8264c6e94c9f50ff4ee391fbcf3
       size: 247
     - path: reports//fr/confusion.csv
-      md5: f821f48c114ede43be25248b46d9f54d
-      size: 89
+      md5: b94737252cae3dc858cd71c25c4f8804
+      size: 105
     - path: reports//fr/metrics.json
-      md5: 474695258b29307b8ed832bf8683a59c
-      size: 919
+      md5: ab049dd79eed2390f58977dbb05732a9
+      size: 867
     - path: reports//fr/train_progress.csv
-      md5: 06ac7523fc8652f326b1b9b92ff69e26
+      md5: 3553c1c8fc6c6f96edc32d3762681bec
       size: 5436
   tika_es:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
@@ -457,8 +457,8 @@ stages:
       size: 1557361
       nfiles: 9
     - path: src/train_model.py
-      md5: 0ee6d4f06fcc3680c392c65f32262a02
-      size: 11799
+      md5: 84d9288b4c277780a33fb3022dcbab17
+      size: 11856
     params:
       params.yaml:
         base:
@@ -521,35 +521,35 @@ stages:
             - -1
     outs:
     - path: data_test/interim/train/es/pca.txt
-      md5: 78a272ab36cd9445cc1dddbc71c4d6da
-      size: 860076
+      md5: 713bc201d94199813aafadf218192343
+      size: 969027
     - path: data_test/interim/train/es/tfidf_idf.txt
-      md5: 0e53f2164b04cd11c3f9c4fc81b61fa0
-      size: 18748
+      md5: 5b11aa32e560a1c9d062b32c857a5277
+      size: 18896
     - path: data_test/interim/train/es/tfidf_vocab.txt
-      md5: 5399ae448d52d9c1bd8fdf776c7e0015
-      size: 11002
+      md5: c0f8ee4c2b724985c7ba2d75f9d2c663
+      size: 10994
     - path: data_test/interim/train/es/tfidf_vocab_words.txt
-      md5: 6d1a8cf653c815b0aef6ebc9478e31e5
-      size: 8005
+      md5: 24431bfd173ec0717ff54570380062c1
+      size: 7910
     - path: models//es/model.txt
-      md5: 5f2d7ab14804fa9d788111e552950571
-      size: 6207
+      md5: 2ed30b921f5263e7441616b01d64b076
+      size: 6965
     - path: models//es/pca.pkl
-      md5: 3b5dd9ab1fd22234fb310b47fe30567b
-      size: 321245
+      md5: 739895c3fa2696b93983ccaa6576e762
+      size: 362325
     - path: reports//es/best_params.yaml
-      md5: f1512bf03a0e6acff071682123898ffd
+      md5: 07eec8264c6e94c9f50ff4ee391fbcf3
       size: 247
     - path: reports//es/confusion.csv
-      md5: f0a7ed933f67429146e022bb7b77ed8f
-      size: 93
+      md5: 00e43601cf3af218e8862ef6d1454baa
+      size: 101
     - path: reports//es/metrics.json
-      md5: 91e7578485b5300895ebd14c095896ab
-      size: 931
+      md5: cf7fca869303cd2080dbf94b37aa5186
+      size: 871
     - path: reports//es/train_progress.csv
-      md5: 8bf7e0f4851105a92ad737481b2efce4
-      size: 5436
+      md5: 5a4548d507cb7a4dc991a3ccb6a89769
+      size: 5196
   tika_it:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=it
@@ -631,8 +631,8 @@ stages:
       size: 1339604
       nfiles: 9
     - path: src/train_model.py
-      md5: 0ee6d4f06fcc3680c392c65f32262a02
-      size: 11799
+      md5: 84d9288b4c277780a33fb3022dcbab17
+      size: 11856
     params:
       params.yaml:
         base:
@@ -695,35 +695,35 @@ stages:
             - -1
     outs:
     - path: data_test/interim/train/it/pca.txt
-      md5: 8c030047303335d3d649825817d4cfbc
-      size: 769996
+      md5: 5634fa75210bbf552e30fc2825e657e1
+      size: 878897
     - path: data_test/interim/train/it/tfidf_idf.txt
-      md5: 1ac98d116d86e62d1a4c66bd183745f8
-      size: 18854
+      md5: 624cdcd82599b6648d677191f08b166c
+      size: 18871
     - path: data_test/interim/train/it/tfidf_vocab.txt
-      md5: d3ebae0b548959115f30f8e162351348
-      size: 11018
+      md5: 1c378d6d1e5e8bc823aa3cc02d5c7516
+      size: 11015
     - path: data_test/interim/train/it/tfidf_vocab_words.txt
-      md5: e9096a1c67fb2cedd47c790b7a4ea5fa
-      size: 7711
+      md5: 77776ccb42af11c62488f56434e13d38
+      size: 7663
     - path: models//it/model.txt
-      md5: 16d711c874a1a6c556d61b0d111102c7
-      size: 4944
+      md5: f3472320f5e144552e5778e2df036567
+      size: 6752
     - path: models//it/pca.pkl
-      md5: 40ac1e4b7055fbd5fd76c4e5b2c8e547
-      size: 288381
+      md5: 5d7b1098bffce186160c167e3ce7dd33
+      size: 329461
     - path: reports//it/best_params.yaml
-      md5: f1512bf03a0e6acff071682123898ffd
+      md5: 07eec8264c6e94c9f50ff4ee391fbcf3
       size: 247
     - path: reports//it/confusion.csv
-      md5: abc9f4f4c082c6a0a6f53486f0e757cf
-      size: 89
+      md5: 5e163d8023b09a9e493810f29b93eec4
+      size: 97
     - path: reports//it/metrics.json
-      md5: c64f0b195636f8ca23fb1fb8c75f95b2
-      size: 795
+      md5: 72943a250da16432e21b2653b5f1f377
+      size: 867
     - path: reports//it/train_progress.csv
-      md5: f24ed07fa14a73cdf00a2068ccdf9060
-      size: 5196
+      md5: 562c4edfa770c3897a98790802393ec6
+      size: 5436
   tika_ja:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=ja
@@ -805,8 +805,8 @@ stages:
       size: 2328530
       nfiles: 9
     - path: src/train_model.py
-      md5: 0ee6d4f06fcc3680c392c65f32262a02
-      size: 11799
+      md5: 84d9288b4c277780a33fb3022dcbab17
+      size: 11856
     params:
       params.yaml:
         base:
@@ -869,32 +869,32 @@ stages:
             - -1
     outs:
     - path: data_test/interim/train/ja/pca.txt
-      md5: 0e01ae6ca177b4ec89790a25cecea7a0
-      size: 835224
+      md5: af94f351867941e560ec91d51d250bed
+      size: 1009544
     - path: data_test/interim/train/ja/tfidf_idf.txt
-      md5: f6c1dc84c6c3c30f15d52e5be7c619c2
-      size: 18769
+      md5: 446f10b17db6b459fee1d3010a35873e
+      size: 18828
     - path: data_test/interim/train/ja/tfidf_vocab.txt
-      md5: b149847a269bf75fccc98dbb22211c31
-      size: 11002
+      md5: d26ab8637bf5f4df9b3c5593ab7957ff
+      size: 11010
     - path: data_test/interim/train/ja/tfidf_vocab_words.txt
-      md5: a749e613a7abe564dbb983fe7b103cca
-      size: 6930
+      md5: bf608711940aeeba8b1a740fc1ca9223
+      size: 6916
     - path: models//ja/model.txt
-      md5: 2a7a4462f598763e29fd1a23338dbe53
-      size: 6167
+      md5: 6eadbb540d5504e8782109a2db80a67e
+      size: 7063
     - path: models//ja/pca.pkl
-      md5: 56d6e7c71918c59cde41c38bb191d778
-      size: 313029
+      md5: 4c08db9d0ed6ffbd66607c7929006559
+      size: 378757
     - path: reports//ja/best_params.yaml
-      md5: f1512bf03a0e6acff071682123898ffd
+      md5: 07eec8264c6e94c9f50ff4ee391fbcf3
       size: 247
     - path: reports//ja/confusion.csv
-      md5: ee282aad2b5f4205c6da6849db7c945c
-      size: 93
+      md5: d93221408514b3faaba493dd8f9bdee4
+      size: 109
     - path: reports//ja/metrics.json
-      md5: 7b1c449bf2666b2adc94caa21069c0c2
-      size: 923
+      md5: 0b2bced4ece8c756f7302150584c786d
+      size: 811
     - path: reports//ja/train_progress.csv
-      md5: 1d267d31d9ed06f062193ddcc507cca8
-      size: 5436
+      md5: cf7a5975ba52e8f0ab8bd41a4f7c3e15
+      size: 4956
