@@ -113,9 +113,9 @@ categories_all = {
         "Marketing",
         "sales_marketing_pr",
     },
-    "HR": {"HR"},
+    "HR": {"HR", "hr"},
     "Manufacturing": {
-        "Manufacturing",
+        "manufacturing",
         "Auto & Truck Manufacturers",
         "Manufacturing",
         "Metals & Mining",
