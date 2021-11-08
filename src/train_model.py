@@ -113,9 +113,9 @@ categories_all = {
         "Marketing",
         "sales_marketing_pr",
     },
-    "HR": {"HR"},
+    "HR": {"HR", "hr"},
     "Manufacturing": {
-        "Manufacturing",
+        "manufacturing",
         "Auto & Truck Manufacturers",
         "Manufacturing",
         "Metals & Mining",
@@ -244,6 +244,7 @@ def read_data(config: dict, locale: str):
         interc = set(available_files).intersection(files)
         if interc:
             categories[category] = interc
+    logger.info(f"found caterogies: {categories}")
 
     for category, files in categories.items():
         logger.info(f"reading category {category} with files {files}")
