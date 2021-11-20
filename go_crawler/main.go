@@ -219,7 +219,9 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup, logPath string
 	workers := 0
 	resChan := make(map[int]chan CollyResultChan, len(companies))
 	var innerWg sync.WaitGroup
-	innerWg.Add(len(companies) + 1)
+	wg_total := len(companies)
+	logger.Printf("[CollyCrawl] adding %v to WaitGroup\n", wg_total)
+	innerWg.Add(wg_total)
 
 	// Track progress from goroutines via channel
 	handleOne := func(resChan chan CollyResultChan, num int) {
@@ -238,11 +240,13 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup, logPath string
 				logger.Printf("[CollyCrawl] #%v Colly done: %v\n", num, r.URL)
 				done++
 				workers--
+				logger.Printf("[CollyCrawl] wg.Done() after success\n")
 				innerWg.Done()
 			} else if r.Done && r.Loaded == 0 {
 				logger.Printf("[CollyCrawl] #%v Colly failed: %v\n", num, r.URL)
 				done++
 				workers--
+				logger.Printf("[CollyCrawl] wg.Done() after failure")
 				innerWg.Done()
 			}
 
@@ -251,7 +255,8 @@ func (m Miner) CollyCrawl(config collyConfig, wg *sync.WaitGroup, logPath string
 				break
 			}
 		}
-		innerWg.Done()
+		// logger.Printf("[CollyCrawl] wg.Done() after channel close")
+		// innerWg.Done()
 	}
 
 	// Launch goroutine with crawler for each site
