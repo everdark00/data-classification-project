@@ -299,3 +299,62 @@ stages:
         y: ${train.lightgbm_parameters.metric[0]}
         x: iteration
         cache: false
+
+  tika_ru:
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=ru
+    deps:
+      - ${base.data_dir}/${tika.input_path}/ru
+      - src/tika_parser.py
+    outs:
+      - ${base.data_dir}/${tika.output_path}/ru
+    params:
+      - tika
+      - base
+
+  tokenizer_ru:
+    cmd: export PYTHONPATH=$PWD && python -m spacy download ru_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=ru
+    deps:
+      - ${base.data_dir}/${tokenizer.input_path}/ru
+      - src/tokenizer.py
+    outs:
+      - ${base.data_dir}/${tokenizer.output_path}/ru
+    params:
+      - tokenizer
+      - base
+
+  train_ru:
+    cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
+      --locale=ru
+    deps:
+      - ${base.data_dir}/${train.input_path}/ru
+      - src/train_model.py
+    outs:
+      - ${base.data_dir}/${train.interim_path}/ru/tfidf_vocab.txt
+      - ${base.data_dir}/${train.interim_path}/ru/tfidf_idf.txt
+      - ${base.data_dir}/${train.interim_path}/ru/tfidf_vocab_words.txt
+      - ${train.models_path}/ru/pca.pkl
+      - ${base.data_dir}/${train.interim_path}/ru/pca.txt
+      - ${train.models_path}/ru/model.txt
+      - ${train.reports_path}/ru/best_params.yaml
+    params:
+      - base
+      - tokenizer.industries
+      - train
+    metrics:
+      - ${train.reports_path}/ru/metrics.json:
+          cache: false
+    plots:
+      - ${train.reports_path}/ru/confusion.csv:
+          title: confusion matrix
+          template: confusion
+          y: actual
+          x: predicted
+          cache: false
+      - ${train.reports_path}/ru/train_progress.csv:
+          title: train progress
+          template: default
+          y: ${train.lightgbm_parameters.metric[0]}
+          x: iteration
+          cache: false
