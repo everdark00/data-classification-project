@@ -10,6 +10,7 @@ stages:
     - data_test/raw/es
     - data_test/raw/it
     - data_test/raw/ja
+    - data_test/raw/ru
     frozen: true
   tika_de:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml

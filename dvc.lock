@@ -183,25 +183,29 @@ stages:
       size: 1566
     outs:
     - path: data_test/raw/de
-      md5: ed415476b6bb791945121541cd03e0b3.dir
-      size: 94126353
+      md5: 6fe393b1e0b96e1037cb06b354816b95.dir
+      size: 76866325
       nfiles: 205
     - path: data_test/raw/es
-      md5: 2d32648e66465168018d6468213188a4.dir
-      size: 65410390
+      md5: c574656fcfc9b60594db32c2450d9570.dir
+      size: 72889389
       nfiles: 229
     - path: data_test/raw/fr
-      md5: f3c0a7447a4386da507e1dd0c6c15cef.dir
-      size: 67877226
+      md5: ed4a47285bed0b10a86cb41c5d57991d.dir
+      size: 76896937
       nfiles: 218
     - path: data_test/raw/it
-      md5: f85370ff9b8819c5c89f06b516ae76b6.dir
-      size: 44140397
+      md5: 0f5ad4473a3a819809c546a3c64bf541.dir
+      size: 42823503
       nfiles: 196
     - path: data_test/raw/ja
-      md5: fc6304eea4403edd31a64ef0814f3858.dir
-      size: 91818770
+      md5: 3e7f95684161e939643daea733901747.dir
+      size: 91188805
       nfiles: 352
+    - path: data_test/raw/ru
+      md5: 7fff0c0a3e17b9b98a8e73feebaf1841.dir
+      size: 66062297
+      nfiles: 187
   tika_fr:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=fr
