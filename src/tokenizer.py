@@ -20,6 +20,7 @@ LOCALE_TO_DICT = {
 
 
 def tokenizer(text):
+    nlp.max_length = len(text) * 1.1
     text_tokens = nlp(text)
 
     return [
