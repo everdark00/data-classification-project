@@ -12,6 +12,8 @@ from src.utils import load_config
 
 def extract(from_path: Union[Path, str]) -> dict:
     parsed_data = parser.from_file(str(from_path))
+    # NOTE destroys reproducibility since parse time varies from launch to launch
+    del parsed_data["metadata"]["X-TIKA:parse_time_millis"]
     parsed_data["metadata"]["language"] = language.from_buffer(parsed_data["content"])
     return parsed_data
 
