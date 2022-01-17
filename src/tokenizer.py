@@ -16,6 +16,7 @@ LOCALE_TO_DICT = {
     "it": "it_core_news_sm",
     "ja": "ja_core_news_sm",
     "ru": "ru_core_news_sm",
+    "nl": "nl_core_news_sm",
 }
 
 

@@ -358,3 +358,65 @@ stages:
           y: ${train.lightgbm_parameters.metric[0]}
           x: iteration
           cache: false
+
+
+  # The Netherlands locale
+  tika_nl:
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=nl
+    deps:
+      - ${base.data_dir}/${tika.input_path}/nl
+      - src/tika_parser.py
+    outs:
+      - ${base.data_dir}/${tika.output_path}/nl
+    params:
+      - tika
+      - base
+
+  tokenizer_nl:
+    cmd: export PYTHONPATH=$PWD && python -m spacy download nl_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=nl
+    deps:
+      - ${base.data_dir}/${tokenizer.input_path}/nl
+      - src/tokenizer.py
+    outs:
+      - ${base.data_dir}/${tokenizer.output_path}/nl
+    params:
+      - tokenizer
+      - base
+
+  train_nl:
+    cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
+      --locale=nl
+    deps:
+      - ${base.data_dir}/${train.input_path}/nl
+      - src/train_model.py
+    outs:
+      - ${base.data_dir}/${train.interim_path}/nl/tfidf_vocab.txt
+      - ${base.data_dir}/${train.interim_path}/nl/tfidf_idf.txt
+      - ${base.data_dir}/${train.interim_path}/nl/tfidf_vocab_words.txt
+      - ${train.models_path}/nl/pca.pkl
+      - ${base.data_dir}/${train.interim_path}/nl/pca.txt
+      - ${train.models_path}/nl/model.txt
+      - ${train.reports_path}/nl/best_params.yaml
+      # - ${train.reports_path}/metrics.json
+    params:
+      - base
+      - tokenizer.industries
+      - train
+    metrics:
+      - ${train.reports_path}/nl/metrics.json:
+          cache: false
+    plots:
+      - ${train.reports_path}/nl/confusion.csv:
+          title: confusion matrix
+          template: confusion
+          y: actual
+          x: predicted
+          cache: false
+      - ${train.reports_path}/nl/train_progress.csv:
+          title: train progress
+          template: default
+          y: ${train.lightgbm_parameters.metric[0]}
+          x: iteration
+          cache: false
