@@ -1,7 +1,3 @@
-dataclassification-crawler
-data/colly/*
-data/google/*
-data/common/*
 aux.go
 *.pdf
 *.html
@@ -9,7 +5,6 @@ aux.go
 *.exe
 builds/*
 database_saves/*
-crawls/*
 ### VisualStudioCode template
 .vscode/*
 !.vscode/settings.json
