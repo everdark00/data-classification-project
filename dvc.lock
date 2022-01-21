@@ -9,8 +9,8 @@ stages:
       size: 75790954761
       nfiles: 333115
     - path: src/tika_parser.py
-      md5: 1de949225b2f26c35330fb0962d52592
-      size: 2183
+      md5: 2a8599bfaf67c0dc9514d170eba989c6
+      size: 2325
     params:
       params.yaml:
         base:
@@ -27,20 +27,20 @@ stages:
           output_path: interim/tika/
     outs:
     - path: data/interim/tika//de
-      md5: c1a5a2ace58b0a2679e4f433fc9c8a68.dir
-      size: 8348823959
+      md5: 10a336a5bacd9095d00b07b081f3073d.dir
+      size: 8335402231
       nfiles: 333115
   tokenizer_de:
     cmd: export PYTHONPATH=$PWD && python -m spacy download de_core_news_sm && python
       src/tokenizer.py --config=params.yaml --locale=de
     deps:
     - path: data/interim/tika/de
-      md5: c1a5a2ace58b0a2679e4f433fc9c8a68.dir
-      size: 8348823959
+      md5: 10a336a5bacd9095d00b07b081f3073d.dir
+      size: 8335402231
       nfiles: 333115
     - path: src/tokenizer.py
-      md5: 092c180748eeabeb886b86d2a3e3d542
-      size: 3805
+      md5: aaba4e14716782c8f30c670ff959263c
+      size: 3871
     params:
       params.yaml:
         base:
@@ -69,7 +69,7 @@ stages:
           - others
     outs:
     - path: data/interim/tokenizer/de
-      md5: c7ee4969c9a6e1cad631cae3006bbec1.dir
+      md5: 53a891cc319a5948013bee1c6776e6c7.dir
       size: 2127686831
       nfiles: 9
   train_de:
@@ -183,8 +183,8 @@ stages:
       size: 88951903981
       nfiles: 341340
     - path: src/tika_parser.py
-      md5: 1de949225b2f26c35330fb0962d52592
-      size: 2183
+      md5: 2a8599bfaf67c0dc9514d170eba989c6
+      size: 2325
     params:
       params.yaml:
         base:
@@ -201,8 +201,8 @@ stages:
           output_path: interim/tika/
     outs:
     - path: data/interim/tika//fr
-      md5: 3dbc49c4c011239cb056f378b7643f8e.dir
-      size: 8698283524
+      md5: 70a363e0ae7a3584d3b90917dac64a5f.dir
+      size: 8684309912
       nfiles: 341340
   tokenizer_fr:
     cmd: export PYTHONPATH=$PWD && python -m spacy download fr_core_news_sm && python
@@ -357,8 +357,8 @@ stages:
       size: 47722809107
       nfiles: 191210
     - path: src/tika_parser.py
-      md5: 1de949225b2f26c35330fb0962d52592
-      size: 2183
+      md5: 2a8599bfaf67c0dc9514d170eba989c6
+      size: 2325
     params:
       params.yaml:
         base:
@@ -375,8 +375,8 @@ stages:
           output_path: interim/tika/
     outs:
     - path: data/interim/tika//it
-      md5: 5a073eb3e79b8f9847ffab36b8198d29.dir
-      size: 4847095940
+      md5: ba4ac490b8d75a5c50f1b1f0f517aa47.dir
+      size: 4839848980
       nfiles: 191210
   tokenizer_it:
     cmd: export PYTHONPATH=$PWD && python -m spacy download it_core_news_sm && python
@@ -531,8 +531,8 @@ stages:
       size: 46119187756
       nfiles: 334412
     - path: src/tika_parser.py
-      md5: 1de949225b2f26c35330fb0962d52592
-      size: 2183
+      md5: 2a8599bfaf67c0dc9514d170eba989c6
+      size: 2325
     params:
       params.yaml:
         base:
@@ -549,8 +549,8 @@ stages:
           output_path: interim/tika/
     outs:
     - path: data/interim/tika//es
-      md5: e609fe493830c55d29f52a2d235505dc.dir
-      size: 7807202360
+      md5: 34fed0553d2d87b03c75082eaadc898b.dir
+      size: 7793738989
       nfiles: 334412
   tokenizer_es:
     cmd: export PYTHONPATH=$PWD && python -m spacy download es_core_news_sm && python
@@ -705,8 +705,8 @@ stages:
       size: 77864476465
       nfiles: 308788
     - path: src/tika_parser.py
-      md5: 1de949225b2f26c35330fb0962d52592
-      size: 2183
+      md5: 2a8599bfaf67c0dc9514d170eba989c6
+      size: 2325
     params:
       params.yaml:
         base:
@@ -723,8 +723,8 @@ stages:
           output_path: interim/tika/
     outs:
     - path: data/interim/tika//ja
-      md5: 52b47f53186fd50b2016d7b3911bc8d6.dir
-      size: 5661957797
+      md5: fc208c044c444aadfcd862eaf31c7e36.dir
+      size: 5651273384
       nfiles: 308788
   tokenizer_ja:
     cmd: export PYTHONPATH=$PWD && python -m spacy download ja_core_news_sm && python
