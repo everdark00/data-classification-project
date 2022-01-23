@@ -30,6 +30,10 @@ def tokenizer(text):
     ]
 
 
+def flatten(t):
+    return [item for sublist in t for item in sublist]
+
+
 def process(
     crawlers: List[str],
     industries: List[str],
@@ -69,7 +73,12 @@ def process(
                                 if i % 100 == 0:
                                     logger.info(f"Processed {i} files")
                                 try:
-                                    tokens = tokenizer(tmp["content"][:max_symbols])
+                                    text = tmp["content"][:max_symbols]
+                                    tokens = flatten(
+                                        [tokenizer(x) for x in text.split()]
+                                    )
+
+                                    # tokens = tokenizer(tmp["content"][:max_symbols])
                                 except UnicodeDecodeError as e:
                                     logger.error(
                                         f"Error while decoding file {tmp}: {e}"
