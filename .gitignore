@@ -1,3 +1,5 @@
+# binaries for crawler
+*/dataclassification-crawler
 aux.go
 *.pdf
 *.html
