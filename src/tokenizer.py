@@ -9,15 +9,8 @@ from loguru import logger
 
 from src.utils import load_config
 
-LOCALE_TO_DICT = {
-    "de": "de_core_news_sm",
-    "fr": "fr_core_news_sm",
-    "es": "es_core_news_sm",
-    "it": "it_core_news_sm",
-    "ja": "ja_core_news_sm",
-    "ru": "ru_core_news_sm",
-    "nl": "nl_core_news_sm",
-}
+
+LOCALE_EXCEPTIONS = {}
 
 
 def flatten(t):
@@ -97,13 +90,17 @@ if __name__ == "__main__":
         Path(base_conf["log_path"]) / "tokenizer_{time}.log",
         level=base_conf["log_level"],
     )
-    nlp = spacy.load(LOCALE_TO_DICT[args.locale], disable=["parser", "ner"])
+    locale = args.locale
+    nlp = spacy.load(
+        LOCALE_EXCEPTIONS.get(locale, f"{locale}_core_news_sm"),
+        disable=["parser", "ner"],
+    )
 
     src_dir = (
-        Path(config["base"]["data_dir"]) / Path(t_conf["input_path"]) / args.locale
+        Path(config["base"]["data_dir"]) / Path(t_conf["input_path"]) / locale
     )
     dest_dir = (
-        Path(config["base"]["data_dir"]) / Path(t_conf["output_path"]) / args.locale
+        Path(config["base"]["data_dir"]) / Path(t_conf["output_path"]) / locale
     )
 
     process(
@@ -111,7 +108,7 @@ if __name__ == "__main__":
         industries=t_conf["industries"],
         max_symbols=t_conf["max_symbols"],
         min_tokens=t_conf["min_tokens"],
-        lang=args.locale,
+        lang=locale,
         data_dir=src_dir,
         result_dir=dest_dir,
     )
