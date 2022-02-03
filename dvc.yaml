@@ -46,13 +46,13 @@ stages:
         cache: false
     plots:
     - ${train.reports_path}/de/confusion.csv:
-        title: confusion matrix
+        title: confusion matrix de
         template: confusion
         y: actual
         x: predicted
         cache: false
     - ${train.reports_path}/de/train_progress.csv:
-        title: train progress
+        title: train progress de
         template: default
         y: ${train.lightgbm_parameters.metric[0]}
         x: iteration
@@ -107,13 +107,13 @@ stages:
         cache: false
     plots:
     - ${train.reports_path}/fr/confusion.csv:
-        title: confusion matrix
+        title: confusion matrix fr
         template: confusion
         y: actual
         x: predicted
         cache: false
     - ${train.reports_path}/fr/train_progress.csv:
-        title: train progress
+        title: train progress fr
         template: default
         y: ${train.lightgbm_parameters.metric[0]}
         x: iteration
@@ -168,13 +168,13 @@ stages:
         cache: false
     plots:
     - ${train.reports_path}/es/confusion.csv:
-        title: confusion matrix
+        title: confusion matrix es
         template: confusion
         y: actual
         x: predicted
         cache: false
     - ${train.reports_path}/es/train_progress.csv:
-        title: train progress
+        title: train progress es
         template: default
         y: ${train.lightgbm_parameters.metric[0]}
         x: iteration
@@ -229,13 +229,13 @@ stages:
         cache: false
     plots:
     - ${train.reports_path}/it/confusion.csv:
-        title: confusion matrix
+        title: confusion matrix it
         template: confusion
         y: actual
         x: predicted
         cache: false
     - ${train.reports_path}/it/train_progress.csv:
-        title: train progress
+        title: train progress it
         template: default
         y: ${train.lightgbm_parameters.metric[0]}
         x: iteration
@@ -288,13 +288,13 @@ stages:
         cache: false
     plots:
     - ${train.reports_path}/ja/confusion.csv:
-        title: confusion matrix
+        title: confusion matrix ja
         template: confusion
         y: actual
         x: predicted
         cache: false
     - ${train.reports_path}/ja/train_progress.csv:
-        title: train progress
+        title: train progress ja
         template: default
         y: ${train.lightgbm_parameters.metric[0]}
         x: iteration
@@ -347,13 +347,13 @@ stages:
           cache: false
     plots:
       - ${train.reports_path}/ru/confusion.csv:
-          title: confusion matrix
+          title: confusion matrix ru
           template: confusion
           y: actual
           x: predicted
           cache: false
       - ${train.reports_path}/ru/train_progress.csv:
-          title: train progress
+          title: train progress ru
           template: default
           y: ${train.lightgbm_parameters.metric[0]}
           x: iteration
