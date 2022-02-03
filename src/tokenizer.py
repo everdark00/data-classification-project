@@ -19,8 +19,13 @@ LOCALE_TO_DICT = {
 }
 
 
+def flatten(t):
+    return [item for sublist in t for item in sublist]
+
+
 def tokenizer(text):
-    text_tokens = nlp(text)
+    nlp.max_length = len(text) * 1.1
+    text_tokens = flatten(list(nlp.pipe(text.split(), n_process=-1)))
 
     return [
         token.lemma_.lower()
