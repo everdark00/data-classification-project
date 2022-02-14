@@ -39,8 +39,8 @@ stages:
       size: 8335402231
       nfiles: 333115
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -213,8 +213,8 @@ stages:
       size: 8684309912
       nfiles: 341340
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -387,8 +387,8 @@ stages:
       size: 4839848980
       nfiles: 191210
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -561,8 +561,8 @@ stages:
       size: 7793738989
       nfiles: 334412
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -909,8 +909,8 @@ stages:
       size: 12927769422
       nfiles: 476797
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -1042,6 +1042,8 @@ stages:
       md5: 49efc0403312c0c0bb4cb23e2d903b71
       size: 2987
     - path: reports//ru/train_progress.csv
+      md5: 738abf71be0579476399a34a79cd972d
+      size: 5768
   tika_nl:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=nl
@@ -1119,8 +1121,8 @@ stages:
       --locale=nl
     deps:
     - path: data/interim/tokenizer/nl
-      md5: e64083ca6db79a5464f02e97eacb85a3.dir
-      size: 137526671
+      md5: a3dc84dca7edb768be0cbd67fa2a8017.dir
+      size: 137582915
       nfiles: 9
     - path: src/train_model.py
       md5: 84d9288b4c277780a33fb3022dcbab17
@@ -1187,23 +1189,23 @@ stages:
             - -1
     outs:
     - path: data/interim/train/nl/pca.txt
-      md5: b74dc713303039f07d6765f17bdffa0a
-      size: 4273122
+      md5: c67baa6575895a431cbe6e213a4615de
+      size: 4250688
     - path: data/interim/train/nl/tfidf_idf.txt
-      md5: fb61f5bc8c5d4ba56b861fccf074c7b7
-      size: 19004
+      md5: 1454e25666c30b546551088e347b2d68
+      size: 19003
     - path: data/interim/train/nl/tfidf_vocab.txt
-      md5: 95f24eefbcc7341cd508478488141df8
-      size: 10998
+      md5: 08b3f2535acaef454e659499c021c89a
+      size: 11004
     - path: data/interim/train/nl/tfidf_vocab_words.txt
-      md5: 0f970c3896a6b17961643544e549443c
-      size: 7909
+      md5: 10a160ecdd070f0b9d79ed368ad6d63c
+      size: 7979
     - path: models//nl/model.txt
-      md5: 910de4000e436825f31feffdb9ab0f0b
-      size: 15067
+      md5: cdadf0cf84a8b8281a887c8da50e9a4e
+      size: 14986
     - path: models//nl/pca.pkl
-      md5: 678000c4b2ca3552cf5e33b03ab4c2e9
-      size: 1602942
+      md5: ec1a7a41cd2f9415aac95477f937fc3c
+      size: 1594726
     - path: reports//nl/best_params.yaml
       md5: 07eec8264c6e94c9f50ff4ee391fbcf3
       size: 247
