@@ -1,3 +1,7 @@
+# MacOS
+.DS_Store
+# whole .idea/
+.idea
 # binaries for crawler
 */dataclassification-crawler
 aux.go
