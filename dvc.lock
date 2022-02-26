@@ -1044,3 +1044,15 @@ stages:
     - path: reports//ru/train_progress.csv
       md5: 738abf71be0579476399a34a79cd972d
       size: 5768
+  make_small_dataset:
+    cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml
+      --test_dir=data_test
+    deps:
+    - path: src/make_test_dataset.py
+      md5: 369f9c4f31aa5e866b26ac0bd2784a77
+      size: 1566
+    outs:
+    - path: data_test/raw/
+      md5: 3dfd2ac6dbe150fefb85a7840aa1061e.dir
+      size: 450261168
+      nfiles: 1409

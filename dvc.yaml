@@ -4,7 +4,8 @@ stages:
       --test_dir=data_test
     deps:
       - src/make_test_dataset.py
-      - data/raw/
+      # NOTE removing since hash calculation takes 1 hour
+      # - data/raw/
     outs:
       - data_test/raw/
   tika_de:
