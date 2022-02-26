@@ -4,6 +4,7 @@ stages:
       --test_dir=data_test
     deps:
       - src/make_test_dataset.py
+      - data/raw/
     outs:
       - data_test/raw/de
       - data_test/raw/fr
