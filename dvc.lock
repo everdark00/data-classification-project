@@ -39,8 +39,8 @@ stages:
       size: 8335402231
       nfiles: 333115
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -213,8 +213,8 @@ stages:
       size: 8684309912
       nfiles: 341340
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -387,8 +387,8 @@ stages:
       size: 4839848980
       nfiles: 191210
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -561,8 +561,8 @@ stages:
       size: 7793738989
       nfiles: 334412
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -735,8 +735,8 @@ stages:
       size: 5651273384
       nfiles: 308788
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -909,8 +909,8 @@ stages:
       size: 12927769422
       nfiles: 476797
     - path: src/tokenizer.py
-      md5: 505eb030bb6e8b4b28ea8e22bf3ef86c
-      size: 3986
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
     params:
       params.yaml:
         base:
@@ -1044,15 +1044,177 @@ stages:
     - path: reports//ru/train_progress.csv
       md5: 738abf71be0579476399a34a79cd972d
       size: 5768
-  make_small_dataset:
-    cmd: export PYTHONPATH=$PWD && python src/make_test_dataset.py --config=params.yaml
-      --test_dir=data_test
+  tika_nl:
+    cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
+      --locale=nl
     deps:
-    - path: src/make_test_dataset.py
-      md5: 369f9c4f31aa5e866b26ac0bd2784a77
-      size: 1566
+    - path: data/raw//nl
+      md5: 6b7f503d105e55369fa30a81b8813f16.dir
+      size: 2631656339
+      nfiles: 15918
+    - path: src/tika_parser.py
+      md5: 2a8599bfaf67c0dc9514d170eba989c6
+      size: 2325
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data
+        tika:
+          input_path: raw/
+          output_path: interim/tika/
     outs:
-    - path: data_test/raw/
-      md5: 3dfd2ac6dbe150fefb85a7840aa1061e.dir
-      size: 450261168
-      nfiles: 1409
+    - path: data/interim/tika//nl
+      md5: bbfd358b95a6d704e8c283d7c0e76ad7.dir
+      size: 293689137
+      nfiles: 15918
+  tokenizer_nl:
+    cmd: export PYTHONPATH=$PWD && python -m spacy download nl_core_news_sm && python
+      src/tokenizer.py --config=params.yaml --locale=nl
+    deps:
+    - path: data/interim/tika/nl
+      md5: bbfd358b95a6d704e8c283d7c0e76ad7.dir
+      size: 293689137
+      nfiles: 15918
+    - path: src/tokenizer.py
+      md5: e6a66576de9bfddcab2394f2630f155b
+      size: 3876
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data
+        tokenizer:
+          min_tokens: 500
+          max_symbols: 250000
+          input_path: interim/tika
+          output_path: interim/tokenizer
+          industries:
+          - finance_banking
+          - it_research_development
+          - manufacturing
+          - medical_medicine_paramedical
+          - sales_marketing_pr
+          - businises_corporate
+          - hr
+          - legal
+          - others
+    outs:
+    - path: data/interim/tokenizer/nl
+      md5: a3dc84dca7edb768be0cbd67fa2a8017.dir
+      size: 137582915
+      nfiles: 9
+  train_nl:
+    cmd: export PYTHONPATH=$PWD && python src/train_model.py --config=params.yaml
+      --locale=nl
+    deps:
+    - path: data/interim/tokenizer/nl
+      md5: a3dc84dca7edb768be0cbd67fa2a8017.dir
+      size: 137582915
+      nfiles: 9
+    - path: src/train_model.py
+      md5: 84d9288b4c277780a33fb3022dcbab17
+      size: 11856
+    params:
+      params.yaml:
+        base:
+          log_level: DEBUG
+          random_seed: 42
+          log_path: logs
+          crawlers:
+          - colly
+          - google
+          - common
+          data_dir: data
+        tokenizer.industries:
+        - finance_banking
+        - it_research_development
+        - manufacturing
+        - medical_medicine_paramedical
+        - sales_marketing_pr
+        - businises_corporate
+        - hr
+        - legal
+        - others
+        train:
+          input_path: interim/tokenizer
+          interim_path: interim/train
+          test_size: 0.25
+          validate_size: 0.2
+          max_features: 1024
+          reports_path: reports/
+          models_path: models/
+          pca_explained_variance_threshold: 0.9
+          lightgbm_parameters:
+            learning_rate:
+            - 0.15
+            boosting:
+            - gbdt
+            max_depth:
+            - 2
+            - 4
+            num_leaves:
+            - 20
+            - 31
+            - 40
+            objective:
+            - multiclass
+            num_iterations:
+            - 240
+            subsample:
+            - 0.5
+            subsample_freq:
+            - 1
+            is_unbalance:
+            - true
+            reg_lambda:
+            - 0.01
+            early_stopping_round:
+            - 3
+            metric:
+            - multi_logloss
+            verbosity:
+            - -1
+    outs:
+    - path: data/interim/train/nl/pca.txt
+      md5: c67baa6575895a431cbe6e213a4615de
+      size: 4250688
+    - path: data/interim/train/nl/tfidf_idf.txt
+      md5: 1454e25666c30b546551088e347b2d68
+      size: 19003
+    - path: data/interim/train/nl/tfidf_vocab.txt
+      md5: 08b3f2535acaef454e659499c021c89a
+      size: 11004
+    - path: data/interim/train/nl/tfidf_vocab_words.txt
+      md5: 10a160ecdd070f0b9d79ed368ad6d63c
+      size: 7979
+    - path: models//nl/model.txt
+      md5: cdadf0cf84a8b8281a887c8da50e9a4e
+      size: 14986
+    - path: models//nl/pca.pkl
+      md5: ec1a7a41cd2f9415aac95477f937fc3c
+      size: 1594726
+    - path: reports//nl/best_params.yaml
+      md5: 07eec8264c6e94c9f50ff4ee391fbcf3
+      size: 247
+    - path: reports//nl/confusion.csv
+      md5: 068eeb711d305799b0124a62296feb8a
+      size: 5869
+    - path: reports//nl/metrics.json
+      md5: fc068e44272a4a637a50babadea6a068
+      size: 565
+    - path: reports//nl/train_progress.csv
+      md5: ab6b81150c41ea4a88ce050c99dab530
+      size: 1836
