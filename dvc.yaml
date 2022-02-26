@@ -6,12 +6,7 @@ stages:
       - src/make_test_dataset.py
       - data/raw/
     outs:
-      - data_test/raw/de
-      - data_test/raw/fr
-      - data_test/raw/es
-      - data_test/raw/it
-      - data_test/raw/ja
-      - data_test/raw/ru
+      - data_test/raw/
   tika_de:
     cmd: export PYTHONPATH=$PWD && python src/tika_parser.py --config=params.yaml
       --locale=de
