@@ -9,7 +9,6 @@ from loguru import logger
 
 from src.utils import load_config
 
-
 LOCALE_EXCEPTIONS = {}
 
 
@@ -96,12 +95,8 @@ if __name__ == "__main__":
         disable=["parser", "ner"],
     )
 
-    src_dir = (
-        Path(config["base"]["data_dir"]) / Path(t_conf["input_path"]) / locale
-    )
-    dest_dir = (
-        Path(config["base"]["data_dir"]) / Path(t_conf["output_path"]) / locale
-    )
+    src_dir = Path(config["base"]["data_dir"]) / Path(t_conf["input_path"]) / locale
+    dest_dir = Path(config["base"]["data_dir"]) / Path(t_conf["output_path"]) / locale
 
     process(
         crawlers=base_conf["crawlers"],
