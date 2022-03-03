@@ -44,11 +44,10 @@ requirements.txt <- package list
 | N | Server                                                                                                                                                                      | Local machine                                                                                                                                                                                                         |
 |---|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 1 | do data crawling to `data/raw` folder                                                                                                                                       | -                                                                                                                                                                                                                     |
-| 2 | Checkout to `dev`, unfreeze `make_small_dataset` stage, run `dvc repro make_small_dataset -f`, then add to DVC `dvc add data_test/`, commit and push `git push && dvc push` | -                                                                                                                                                                                                                     |
-| 3 | Go back to master and push full data `dvc push`                                                                                                                             | Checkout `dev` branch, do `dvc fetch && dvc checkout`. You will have all data from step #2 (small dataset). Conduct experiments, then commit them.                                                                    |
-| 4 | -                                                                                                                                                                           | Open MR to `master`, wait for review and approval process to finish. **DO NOT** merge yet, you need to prepare lock-files.                                                                                            |
-| 5 | -                                                                                                                                                                           | Merge `dev` to `master` **but take `dvc.lock` and `.dvc/config` from `master` branch**. This will prevent unnecessary pipeline reproduction (since we actually swap data used by the whole pipeline during checkout). |
-| 6 | Fetch merged `master`: `git checkout master && git pull`. Run pipeline with `dvc repro`, then push results (git add, git commit, dvc push)                                  | Continue development on `dev` branch                                                                                                                                                                                  |
+| 2 | Unfreeze `make_small_dataset` stage, run `dvc repro make_small_dataset -f`, then add to DVC `dvc add data_test/`, commit and push `git push && dvc push` | -                                                                                                                                                                                                                     |
+| 3 | Push the rest of data: `dvc push`                                                                                                                             | Checkout `main` branch, do `dvc fetch make_small_dataset && dvc checkout make_small_dataset`. You will have all data from step #2 (small dataset). Set `data_dir` in `params.yaml` to `data_test`! Conduct experiments, then commit them.                                                                    |
+| 4 | -                                                                                                                                                                           | Open MR to `main`, wait for review and approval process to finish. **DO NOT** merge yet, you need to revert `data_dir` to `data`.                                                                                            |
+| 6 | Fetch merged `master`: `git checkout master && git pull`. Run pipeline with `dvc repro`, then push results (git add, git commit, dvc push)                                  | Continue development in a separated branch                                                                                                                                                                                  |
 
 ## How to add a language (long way)
 _For quick setup read "Local development" section below._
@@ -93,7 +92,7 @@ All metrics and plots are uploaded
 [here](https://studio.iterative.ai/user/alekseik1/views/dataclassification-crawler-e1vtfsj7dv).
 
 ## Local development
-1. Create a new branch from `dev`.
+1. Create a new branch from `main`.
 2. Set up packages
 ```bash
 python -m venv venv
@@ -112,14 +111,7 @@ dvc checkout make_small_dataset
 4. You should have `data_test` directory filled with data. This directory is your primary data source!
 5. Make sure that `base.data_dir` in `params.yaml` is set to `data_test`
 6. You can now use `dvc repro` as usual. Make changes, commit experiments and have fun.
-7. Open MR to `dev` branch (**not** `main`).
-
-You can combine two approaches in a subtle way:
-
-Firstly, do data crawling, then checkout `dev` branch, unfreeze `make_small_dataset` stage,
-run `dvc repro make_small_dataset -f`, then add to DVC `dvc add data_test/`, commit and push with
-`git push && dvc push`. Then, go back to `master` branch, do `dvc push`.
-
+7. Open MR to `main` branch.
 
 ## How does it work?
 DVC tracks md5 hashes to determine whether the data was changed.
