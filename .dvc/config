@@ -1,7 +1,0 @@
-[cache]
-    type = "reflink,hardlink"
-[core]
-    remote = gcloud
-    autostage = true
-['remote "gcloud"']
-    url = gs://data-classification-documents/prod
